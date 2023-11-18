@@ -1339,6 +1339,7 @@ function void UI_Draw(UI_Box *root)
 	UI_TextStyle *text_style = &root->text_style;
 
 	Vec4F32 corner_radius = rect_style->corner_radius;
+	corner_radius = V4MulF32(corner_radius, (F32)ui_state.font->height/30.0f);
 
 	if(root->flags & UI_BoxFlag_DrawDropShadow)
 	{

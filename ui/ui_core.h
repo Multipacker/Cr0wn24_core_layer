@@ -39,7 +39,7 @@ typedef enum UI_BoxFlag
 
 	UI_BoxFlag_FixedPos = UI_BoxFlag_FixedX | UI_BoxFlag_FixedY,
 
-	UI_BoxFlag_AnimateSize = UI_BoxFlag_AnimateWidth | UI_BoxFlag_AnimateHeight 
+	UI_BoxFlag_AnimateSize = UI_BoxFlag_AnimateWidth | UI_BoxFlag_AnimateHeight
 } UI_BoxFlag;
 
 typedef enum UI_Corner
