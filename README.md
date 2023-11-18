@@ -33,6 +33,8 @@ Only builds on windows at the moment.
 1. Run `build_core_layer_demo.bat` with visual studio environment variables enabled
 2. A folder `build` has been created in the root folder, run the .exe created.
 
-## Screenshot
+## Showcase
+
+This is a showcase of some basic features of my core layer.
 
 ![image](https://github.com/Cr0wn24/core_layer_Public/assets/61281897/b9053aa0-5686-46cd-861e-7558b9c889e6)
