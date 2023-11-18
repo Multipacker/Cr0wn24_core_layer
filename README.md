@@ -20,6 +20,7 @@ It includes:
 -  Renderer layer
    - 2D abstraction layer built on Direct3D11 and OpenGL (OpenGL not working at the current state)
    - Push rectangles, text or bitmaps onto batches
+   - Subpixel text rendering
 - UI Layer
   - Immediate-mode style GUI
   - Easy to use API
