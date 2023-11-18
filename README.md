@@ -1,4 +1,4 @@
-# core_layer
+# Core layer
 
 This is my core_layer used in almost all of my projects. It is all written from scratch with no libraries except for:
 
