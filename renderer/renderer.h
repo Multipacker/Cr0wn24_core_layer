@@ -180,7 +180,7 @@ typedef struct R_Font
 #define R_PushRect(min, max, ...) R_PushRect_(min, max, (R_RectParams){.texture = r_state.white_texture, .color = V4(1.0f, 1.0f, 1.0f, 1.0f), __VA_ARGS__})
 
 #ifndef CORE_PATH
-#define CORE_PATH "../code/core_layer/"
+#define CORE_PATH "../code/../"
 #endif
 
 #define RESOURCE_PATH Glue(CORE_PATH, "res/") 

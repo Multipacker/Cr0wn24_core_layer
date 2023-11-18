@@ -1,5 +1,5 @@
 #define STB_IMAGE_IMPLEMENTATION
-#include "core_layer/renderer/ext/stb_image.h"
+#include "../renderer/ext/stb_image.h"
 
 #include <freetype/freetype.h>
 

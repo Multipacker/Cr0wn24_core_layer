@@ -28,9 +28,9 @@ pushd ..\build
 
 set common_compiler_flags=%common_compiler_flags% %disabled_warnings% %include_dirs%
 
-@REM cl -c %ft_files% -Zi -Od -DFT_CONFIG_OPTION_ERROR_STRINGS -DFT2_BUILD_LIBRARY %include_dirs%
+cl -c %ft_files% -Zi -Od -DFT_CONFIG_OPTION_ERROR_STRINGS -DFT2_BUILD_LIBRARY %include_dirs%
 
-@REM lib *.obj -OUT:freetype.lib
+lib *.obj -OUT:freetype.lib
 
 set shader_path=..\res\shaders
 set shader_output_path=..\renderer\backends\d3d11
