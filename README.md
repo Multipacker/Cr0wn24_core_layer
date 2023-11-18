@@ -1,6 +1,6 @@
 # Core layer
 
-This is my core layer used as a foundation in almost all of my projects. It is all written from scratch with no libraries except for:
+This is my core layer written in C used as a foundation in almost all of my projects. It is all written from scratch with no libraries except for:
 
 - stb_image.h (for reading .png, .jpg, ...)
 - freetype (for creating font bitmaps)
