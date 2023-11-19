@@ -9,7 +9,7 @@
 #include <stdbool.h>
 #include <time.h>
 
-#define function 			static
+#define internal 			static
 #define local_persist static
 #define global 				static
 

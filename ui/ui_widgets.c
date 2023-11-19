@@ -1,4 +1,4 @@
-function void
+internal void
 UI_DefaultSize(UI_Size x, UI_Size y)
 {
 	UI_LayoutStyle *layout = UI_TopLayout();
@@ -14,7 +14,7 @@ UI_DefaultSize(UI_Size x, UI_Size y)
 	}
 }
 
-function void
+internal void
 UI_Spacer(UI_Size size)
 {
 	Axis2 axis = UI_TopParent()->child_layout_axis;
@@ -24,7 +24,7 @@ UI_Spacer(UI_Size size)
 						 Str8Lit(""));
 }
 
-function UI_Box *
+internal UI_Box *
 UI_Text(String8 string)
 {
 	UI_Box *box = UI_BoxMake(UI_BoxFlag_DrawText,
@@ -33,7 +33,7 @@ UI_Text(String8 string)
 	return(box);
 }
 
-function void
+internal void
 UI_TextF(char *fmt, ...)
 {
 	va_list args;
@@ -43,7 +43,7 @@ UI_TextF(char *fmt, ...)
 	va_end(args);
 }
 
-function UI_Comm
+internal UI_Comm
 UI_Button(String8 string)
 {
 	UI_LayoutStyle *layout = UI_TopLayout();
@@ -73,7 +73,7 @@ UI_Button(String8 string)
 	return(comm);
 }
 
-function UI_Comm
+internal UI_Comm
 UI_ButtonF(char *fmt, ...)
 {
 	va_list args;
@@ -88,7 +88,7 @@ UI_ButtonF(char *fmt, ...)
 	return(comm);
 }
 
-function UI_Comm
+internal UI_Comm
 UI_Check(String8 string, B32 *val)
 {
 	B32 save_state = UI_TopLayout()->flags & UI_BoxFlag_SaveState;
@@ -141,7 +141,7 @@ UI_Check(String8 string, B32 *val)
 	return(comm);
 }
 
-function UI_Box *
+internal UI_Box *
 UI_BeginNamedColumn(String8 string)
 {
 	UI_DefaultSize(UI_SumOfChildren(), UI_SumOfChildren());
@@ -152,26 +152,26 @@ UI_BeginNamedColumn(String8 string)
 	return(box);
 }
 
-function void
+internal void
 UI_EndNamedColumn()
 {
 	UI_PopParent();
 }
 
-function UI_Box *
+internal UI_Box *
 UI_BeginColumn()
 {
 	UI_Box *box = UI_BeginNamedColumn(Str8Lit(""));
 	return(box);
 }
 
-function void
+internal void
 UI_EndColumn()
 {
 	UI_EndNamedColumn();
 }
 
-function UI_Box *
+internal UI_Box *
 UI_BeginNamedRow(String8 string)
 {
 	UI_DefaultSize(UI_SumOfChildren(), UI_SumOfChildren());
@@ -181,26 +181,26 @@ UI_BeginNamedRow(String8 string)
 	return(box);
 }
 
-function void
+internal void
 UI_EndNamedRow()
 {
 	UI_PopParent();
 }
 
-function UI_Box *
+internal UI_Box *
 UI_BeginRow()
 {
 	UI_Box *box = UI_BeginNamedRow(Str8Lit(""));
 	return(box);
 }
 
-function void
+internal void
 UI_EndRow()
 {
 	UI_EndNamedRow();
 }
 
-function void
+internal void
 UI_EndTree()
 {
 	UI_EndColumn();
@@ -213,7 +213,7 @@ UI_EndTree()
 	UI_PopString();
 }
 
-function B32
+internal B32
 UI_BeginTree(String8 string)
 {
 	UI_PushStringF(string);
@@ -308,7 +308,7 @@ UI_BeginTree(String8 string)
 	return(should_show);
 }
 
-function B32
+internal B32
 UI_BeginTreeF(char *fmt, ...)
 {
 	va_list args;
@@ -319,7 +319,7 @@ UI_BeginTreeF(char *fmt, ...)
 	return(b);
 }
 
-function UI_Comm
+internal UI_Comm
 UI_SliderF32(F32 *val, F32 min, F32 max, String8 string)
 {
 	UI_PushString(string);
@@ -386,7 +386,7 @@ UI_SliderF32(F32 *val, F32 min, F32 max, String8 string)
 	return(comm);
 }
 
-function UI_Comm
+internal UI_Comm
 UI_SliderS32(S32 *val, S32 min, S32 max, String8 string)
 {
 	UI_PushString(string);
@@ -449,7 +449,7 @@ UI_SliderS32(S32 *val, S32 min, S32 max, String8 string)
 	return(comm);
 }
 
-function void
+internal void
 UI_Divider()
 {
 	UI_NextSize(UI_TopParent()->child_layout_axis, UI_Pixels(1));
@@ -458,7 +458,7 @@ UI_Divider()
 	UI_BoxMake(UI_BoxFlag_DrawBackground, Str8Lit(""));
 }
 
-function void
+internal void
 UI_ColorPicker(Vec4F32 *color, String8 string)
 {
 	UI_PushString(string);
@@ -534,7 +534,7 @@ UI_ColorPicker(Vec4F32 *color, String8 string)
 	UI_PopString();
 }
 
-function UI_Comm
+internal UI_Comm
 UI_TextInput(char *buffer, size_t buffer_size, String8 string)
 {
 	UI_PushString(string);
@@ -618,7 +618,7 @@ typedef struct UI_RadioData
 	String8 string;
 } UI_RadioData;
 
-function void
+internal void
 UI_Radio(UI_RadioData *data, U32 data_count, String8 string)
 {
 	UI_PushString(string);
@@ -680,7 +680,7 @@ UI_Radio(UI_RadioData *data, U32 data_count, String8 string)
 	UI_PopString();
 }
 
-function void
+internal void
 UI_PopScrollableContainer()
 {
 	UI_PopString();
@@ -694,7 +694,7 @@ UI_PopScrollableContainer()
 	R_PopClipRect();
 }
 
-function UI_Box *
+internal UI_Box *
 UI_PushScrollableContainer(String8 string)
 {
 	UI_PushString(string);

@@ -1,20 +1,20 @@
 #pragma comment(lib, "opengl32.lib")
 
 #define X(type, name) static type name;
-GL_FUNCTIONS(X)
+GL_internalS(X)
 #undef X
 
 global PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB;
 global PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB;
 global PFNWGLSwapINTERVALEXTPROC wglSwapIntervalEXT;
 
-function void FatalError(char *message)
+internal void FatalError(char *message)
 {
 	MessageBoxA(NULL, message, "Error", MB_ICONEXCLAMATION);
 	ExitProcess(0);
 }
 
-function void APIENTRY OS_GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
+internal void APIENTRY OS_GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
 																					 GLsizei length, const GLchar* message, const void* user)
 {
 	OutputDebugStringA(message);
@@ -29,7 +29,7 @@ function void APIENTRY OS_GL_DebugCallback(GLenum source, GLenum type, GLuint id
 	}
 }
 
-function B32 StringsAreEqual(char *src, char *dst, size_t dstlen)
+internal B32 StringsAreEqual(char *src, char *dst, size_t dstlen)
 {
 	while(*src && dstlen-- && *dst)
 	{
@@ -42,7 +42,7 @@ function B32 StringsAreEqual(char *src, char *dst, size_t dstlen)
 	return (dstlen && *src == *dst) || (!dstlen && *src == 0);
 }
 
-function void OS_GL_GetWGLFunctions()
+internal void OS_GL_GetWGLinternals()
 {
 	HWND dummy = CreateWindowEx(0, "STATIC", "DummyWindow", WS_OVERLAPPED, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, NULL, NULL);
 	Assert(dummy && "Failed to create dummy window");
@@ -131,9 +131,9 @@ function void OS_GL_GetWGLFunctions()
 	DestroyWindow(dummy);
 }
 
-function void OS_GL_CreateContext(OS_Window *window)
+internal void OS_GL_CreateContext(OS_Window *window)
 {
-	OS_GL_GetWGLFunctions();
+	OS_GL_GetWGLinternals();
 
 	HDC dc = window->device_context;
 
@@ -199,9 +199,9 @@ function void OS_GL_CreateContext(OS_Window *window)
 		BOOL ok = wglMakeCurrent(dc, rc);
 		Assert(ok && "Failed to make current OpenGL context");
 
-		// load OpenGL functions
+		// load OpenGL internals
 #define X(type, name) name = (type)wglGetProcAddress(#name); Assert(name);
-		GL_FUNCTIONS(X)
+		GL_internalS(X)
 #undef X
 			// enable debug callback
 			glDebugMessageCallback(&OS_GL_DebugCallback, NULL);

@@ -1,6 +1,6 @@
 global D3D11State d3d11_state;
 
-function void
+internal void
 D3D11_Init(OS_Window *window)
 {
 	Assert(window);
@@ -184,7 +184,7 @@ D3D11_Init(OS_Window *window)
 	}
 }
 
-function void
+internal void
 D3D11_End()
 {
 	HRESULT hr;
@@ -348,7 +348,7 @@ D3D11_End()
 	}
 }
 
-function R_Handle
+internal R_Handle
 D3D11_LoadTexture(void *data, S32 width, S32 height)
 {
 	Assert(data);

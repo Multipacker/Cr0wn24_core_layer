@@ -1,6 +1,6 @@
 global OpenGL open_gl;
 
-function ShaderProgram
+internal ShaderProgram
 R_GL_CreateShader(String8 vertex_shader_path, String8 fragment_shader_path, B32 debug_callback)
 {
 	if(!debug_callback)
@@ -89,7 +89,7 @@ R_GL_CreateShader(String8 vertex_shader_path, String8 fragment_shader_path, B32 
 	return(result);
 }
 
-function void R_GL_Begin(OS_Window *window, MemoryArena *frame_arena)
+internal void R_GL_Begin(OS_Window *window, MemoryArena *frame_arena)
 {
 	U32 num_indices_per_rect = 6;
 	r_state.num_rects = 0;
@@ -103,7 +103,7 @@ function void R_GL_Begin(OS_Window *window, MemoryArena *frame_arena)
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 }
 
-function void R_GL_End(OS_Window *window)
+internal void R_GL_End(OS_Window *window)
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -143,7 +143,7 @@ function void R_GL_End(OS_Window *window)
 	}
 }
 
-function void R_GL_Init()
+internal void R_GL_Init()
 {
 	r_state.max_num_rects = 1'000'000;
 
@@ -246,7 +246,7 @@ function void R_GL_Init()
 	}
 }
 
-function U32 R_GL_GenerateTextureHandle(R_Texture *texture)
+internal U32 R_GL_GenerateTextureHandle(R_Texture *texture)
 {
 	U32 texture_handle = open_gl.next_texture_handle;
 
@@ -263,7 +263,7 @@ function U32 R_GL_GenerateTextureHandle(R_Texture *texture)
 	return texture_handle;
 }
 
-function void R_GL_UpdateTextureHandle(R_Texture *texture)
+internal void R_GL_UpdateTextureHandle(R_Texture *texture)
 {
 	glBindTexture(GL_TEXTURE_2D_ARRAY, open_gl.texture_array);
 

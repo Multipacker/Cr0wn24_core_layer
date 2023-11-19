@@ -1,13 +1,22 @@
+#pragma comment(lib, "freetype.lib")
+
 #define STB_IMAGE_IMPLEMENTATION
-#include "../renderer/ext/stb_image.h"
+#include "../external/stb_image.h"
+
+// NOTE(hampus): freetype has variables named "internal"
+#ifdef internal
+#undef internal
+#endif
 
 #include <freetype/freetype.h>
 
+#define internal static
+
 global R_State r_state;
 
-function R_Handle D3D11_LoadTexture(void *data, S32 width, S32 height);
+internal R_Handle D3D11_LoadTexture(void *data, S32 width, S32 height);
 
-function void
+internal void
 R_Init()
 {
 	U32 white = 0xffffffff;
@@ -16,7 +25,7 @@ R_Init()
 	r_state.white_texture.dim.width = 1;
 }
 
-function R_Texture
+internal R_Texture
 R_LoadTexture(String8 path)
 {
 	R_Texture result = {0};
@@ -31,23 +40,23 @@ R_LoadTexture(String8 path)
 	return(result);
 }
 
-function B32
+internal B32
 R_HandleMatch(R_Handle a, R_Handle b)
 {
 	return a.a == b.a && a.b == b.b;
 }
 
-function B32
+internal B32
 R_RectF32Match(RectF32 a, RectF32 b)
 {
 	return (a.x0 == b.x0 && a.x1 == b.x1 && a.y0 == b.y0 && a.y1 == b.y1);
 }
 
 #if R_DEBUG
-function void
+internal void
 R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params, char *file, S32 line)
 #else
-function void
+internal void
 R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params)
 #endif
 {
@@ -63,9 +72,9 @@ R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params)
 	}
 
 	if(!batch_node ||
-		 (!R_HandleMatch(texture.handle, batch_node->batch->tex.handle) &&
-			!R_HandleMatch(texture.handle, r_state.white_texture.handle)) ||
-		 !rect_match)
+	   (!R_HandleMatch(texture.handle, batch_node->batch->tex.handle) &&
+		!R_HandleMatch(texture.handle, r_state.white_texture.handle)) ||
+	   !rect_match)
 	{
 		// NOTE(hampus): If the previus batch just contained a white texture,
 		// we'll just replace it with our texture instead
@@ -114,7 +123,7 @@ R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params)
 	batch->num_rects++;
 }
 
-function void
+internal void
 R_PushGlyph(Vec2F32 pos, S32 glyph_height, R_Font *font, R_Glyph *glyph, Vec4F32 color)
 {
 	F32 scale = (F32)glyph_height / (F32)font->height;
@@ -126,23 +135,23 @@ R_PushGlyph(Vec2F32 pos, S32 glyph_height, R_Font *font, R_Glyph *glyph, Vec4F32
 	F32 height = glyph->size.y * scale;
 
 	R_PushRect(V2(xpos,
-								ypos),
-						 V2(xpos + width,
-								ypos + height),
-						 .texture = glyph->texture,
-						 .color = color,
-						 .text = true);
+				  ypos),
+			   V2(xpos + width,
+				  ypos + height),
+			   .texture = glyph->texture,
+			   .color = color,
+			   .text = true);
 
 }
 
-function void
+internal void
 R_PushGlyphIndex(Vec2F32 pos, S32 glyph_height, R_Font *font, U32 index, Vec4F32 color)
 {
 	R_Glyph *glyph = font->glyphs + index;
 	R_PushGlyph(pos, glyph_height, font, glyph, color);
 }
 
-function void
+internal void
 R_PushText(Vec2F32 pos, S32 height, R_Font *font, String8 text, Vec4F32 color)
 {
 	F32 scale = (F32)height / (F32)font->height;
@@ -155,9 +164,9 @@ R_PushText(Vec2F32 pos, S32 height, R_Font *font, String8 text, Vec4F32 color)
 	}
 }
 
-function TextureAtlas
+internal TextureAtlas
 R_PackBitmapsIntoTextureAtlas(MemoryArena *arena, S32 atlas_width, S32 atlas_height,
-															R_LoadedBitmap *bitmaps, S32 bitmap_count, S32 padding)
+							  R_LoadedBitmap *bitmaps, S32 bitmap_count, S32 padding)
 {
 	// TODO(hampus): Really naive algoritm. Rewrite
 
@@ -262,7 +271,7 @@ R_PackBitmapsIntoTextureAtlas(MemoryArena *arena, S32 atlas_width, S32 atlas_hei
 	return result;
 }
 
-function void
+internal void
 R_LoadFont(MemoryArena *arena, R_Font *font, String8 font_path, String8 icon_path, S32 size)
 {
 	// TODO(hampus): This is temporary for now. Rewrite
@@ -290,8 +299,8 @@ R_LoadFont(MemoryArena *arena, R_Font *font, String8 font_path, String8 icon_pat
 	font->max_descent = ((S32)Abs((F32)face->descender * ((F32)face->size->metrics.y_scale / 65536.0f))) >> 6;
 
 	for(U32 glyph_index = 0;
-			glyph_index < 128;
-			++glyph_index)
+		glyph_index < 128;
+		++glyph_index)
 	{
 		FT_Load_Char(face, glyph_index, FT_LOAD_RENDER | FT_LOAD_TARGET_LCD);
 		// FT_Load_Glyph(face, (FT_UInt)(glyph_index), FT_LOAD_RENDER | FT_LOAD_TARGET_LCD);
@@ -360,8 +369,8 @@ R_LoadFont(MemoryArena *arena, R_Font *font, String8 font_path, String8 icon_pat
 	FT_Set_Pixel_Sizes(icon_face, 0, size - 5);
 
 	for(U32 glyph_index = 0;
-			glyph_index < 256;
-			++glyph_index)
+		glyph_index < 256;
+		++glyph_index)
 	{
 		FT_Load_Glyph(icon_face, (FT_UInt)(glyph_index), FT_LOAD_RENDER | FT_LOAD_TARGET_LCD);
 
@@ -429,7 +438,7 @@ R_LoadFont(MemoryArena *arena, R_Font *font, String8 font_path, String8 icon_pat
 #endif
 }
 
-function void
+internal void
 R_PushClipRect(RectF32 rect)
 {
 	Assert(rect.x1 > rect.x0);
@@ -440,13 +449,13 @@ R_PushClipRect(RectF32 rect)
 	StackPush(r_state.clip_rect_stack.first, node);
 }
 
-function void
+internal void
 R_PopClipRect()
 {
 	StackPop(r_state.clip_rect_stack.first);
 }
 
-function RectF32
+internal RectF32
 R_MakeRectF32(F32 x0, F32 y0, F32 x1, F32 y1)
 {
 	RectF32 result = {x0, y0, x1, y1};
@@ -454,7 +463,7 @@ R_MakeRectF32(F32 x0, F32 y0, F32 x1, F32 y1)
 	return result;
 }
 
-function void
+internal void
 R_Begin(MemoryArena *arena)
 {
 	r_state.arena = arena;
@@ -464,7 +473,7 @@ R_Begin(MemoryArena *arena)
 	R_PushClipRect(R_MakeRectF32(0, 0, 2560, 1440));
 }
 
-function void
+internal void
 R_End()
 {
 	R_PopClipRect();
@@ -472,7 +481,7 @@ R_End()
 	D3D11_End();
 }
 
-function Vec2F32
+internal Vec2F32
 R_GetGlyphDim(R_Font *font, R_Glyph *glyph)
 {
 	Vec2F32 result;
@@ -483,7 +492,7 @@ R_GetGlyphDim(R_Font *font, R_Glyph *glyph)
 	return result;
 }
 
-function Vec2F32
+internal Vec2F32
 R_GetTextDim(R_Font *font, String8 text)
 {
 	Vec2F32 result = {0};
@@ -497,7 +506,7 @@ R_GetTextDim(R_Font *font, String8 text)
 	return(result);
 }
 
-function B32
+internal B32
 R_PointInsideRect(Vec2F32 p, RectF32 rect)
 {
 	B32 result = p.x >= rect.x0 && p.x < rect.x1 && p.y >= rect.y0 && p.y < rect.y1;
@@ -505,7 +514,7 @@ R_PointInsideRect(Vec2F32 p, RectF32 rect)
 	return result;
 }
 
-function RectF32
+internal RectF32
 R_IntersectRectF32(RectF32 dest, RectF32 src)
 {
 	RectF32 result = {0};

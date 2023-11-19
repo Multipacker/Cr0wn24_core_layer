@@ -1,4 +1,4 @@
-function U64 CStringLength(char * str)
+internal U64 CStringLength(char * str)
 {
 	U64 result = 0;
 
@@ -10,7 +10,7 @@ function U64 CStringLength(char * str)
 	return result;
 }
 
-function B32 CStringsAreEqual(char *string0, char *string1)
+internal B32 CStringsAreEqual(char *string0, char *string1)
 {
 	B32 result = true;
 
@@ -36,7 +36,7 @@ function B32 CStringsAreEqual(char *string0, char *string1)
 	return(result);
 }
 
-function void CStringCopy(char *dest, char *src, U32 src_size, U32 dest_size)
+internal void CStringCopy(char *dest, char *src, U32 src_size, U32 dest_size)
 {
 	Assert(src_size >= dest_size);
 	for(U32 i = 0; i < dest_size; ++i)
@@ -45,7 +45,7 @@ function void CStringCopy(char *dest, char *src, U32 src_size, U32 dest_size)
 	}
 }
 
-function String8 Str8(U8 *str, U64 size)
+internal String8 Str8(U8 *str, U64 size)
 {
 	String8 string;
 	string.str = str;
@@ -53,7 +53,7 @@ function String8 Str8(U8 *str, U64 size)
 	return(string);
 }
 
-function String8 PushStr8FV(MemoryArena *arena, char *fmt, va_list args)
+internal String8 PushStr8FV(MemoryArena *arena, char *fmt, va_list args)
 {
 	String8 result = {0};
 	U64 needed_bytes = vsnprintf(0, 0, fmt, args) + 1;
@@ -63,7 +63,7 @@ function String8 PushStr8FV(MemoryArena *arena, char *fmt, va_list args)
 	return(result);
 }
 
-function String8 PushStr8F(MemoryArena *arena, char *fmt, ...)
+internal String8 PushStr8F(MemoryArena *arena, char *fmt, ...)
 {
 	String8 result = {0};
 	va_list args;
@@ -73,7 +73,7 @@ function String8 PushStr8F(MemoryArena *arena, char *fmt, ...)
 	return(result);
 }
 
-function String8 PushStr8Size(MemoryArena *arena, char *src, U64 src_size)
+internal String8 PushStr8Size(MemoryArena *arena, char *src, U64 src_size)
 {
 	String8 result = {0};
 	result.size = src_size;
@@ -83,7 +83,7 @@ function String8 PushStr8Size(MemoryArena *arena, char *src, U64 src_size)
 	return(result);
 }
 
-function B32 Str8Match(String8 a, String8 b)
+internal B32 Str8Match(String8 a, String8 b)
 {
 	B32 result = true;
 
@@ -106,7 +106,7 @@ function B32 Str8Match(String8 a, String8 b)
 	return result;
 }
 
-function String8 Str8Append(MemoryArena *arena, String8 a, String8 b)
+internal String8 Str8Append(MemoryArena *arena, String8 a, String8 b)
 {
 	String8 result = {0};
 	result.size = a.size + b.size;
@@ -119,7 +119,7 @@ function String8 Str8Append(MemoryArena *arena, String8 a, String8 b)
 	return result;
 }
 
-function S32 Str8FindSubStr8(String8 haystack, String8 needle)
+internal S32 Str8FindSubStr8(String8 haystack, String8 needle)
 {
 	if(haystack.size <= needle.size)
 	{
@@ -156,7 +156,7 @@ function S32 Str8FindSubStr8(String8 haystack, String8 needle)
 	return pos;
 }
 
-function String8List Str8Split(MemoryArena *arena, String8 string, char separator)
+internal String8List Str8Split(MemoryArena *arena, String8 string, char separator)
 {
 	String8List result = {0};
 

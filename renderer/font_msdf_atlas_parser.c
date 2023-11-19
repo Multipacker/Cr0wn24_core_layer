@@ -1,19 +1,19 @@
-function S32 CharToS32(char ch)
+internal S32 CharToS32(char ch)
 {
 	return (ch - 48);
 }
 
-function U16 CharToU16(char ch)
+internal U16 CharToU16(char ch)
 {
 	return (ch - 48);
 }
 
-function U8 CharToU8(char ch)
+internal U8 CharToU8(char ch)
 {
 	return (ch - 48);
 }
 
-function S32 Str8ToS32(String8 string)
+internal S32 Str8ToS32(String8 string)
 {
 	S32 result = 0;
 
@@ -25,7 +25,7 @@ function S32 Str8ToS32(String8 string)
 	return(result);
 }
 
-function U16 Str8ToU16(String8 string)
+internal U16 Str8ToU16(String8 string)
 {
 	U16 result = 0;
 
@@ -37,7 +37,7 @@ function U16 Str8ToU16(String8 string)
 	return(result);
 }
 
-function U8 Str8ToU8(String8 string)
+internal U8 Str8ToU8(String8 string)
 {
 	U8 result = 0;
 
@@ -49,7 +49,7 @@ function U8 Str8ToU8(String8 string)
 	return(result);
 }
 
-function F32 Str8ToF32(String8 string)
+internal F32 Str8ToF32(String8 string)
 {
 	F32 result = 0;
 
@@ -93,7 +93,7 @@ function F32 Str8ToF32(String8 string)
 	return(result);
 }
 
-function String8 Str8CUntilChar(char *data, char ch)
+internal String8 Str8CUntilChar(char *data, char ch)
 {
 	String8 result = {0};
 
@@ -115,7 +115,7 @@ typedef struct AtlasGlyphMetrics
 	GlyphMetrics icon_metrics[FontIcon_COUNT];
 } AtlasGlyphMetrics;
 
-function U64 ParseGlyph(char *data, GlyphMetrics *metrics)
+internal U64 ParseGlyph(char *data, GlyphMetrics *metrics)
 {
 	U64 length = 0;
 	{
@@ -191,7 +191,7 @@ function U64 ParseGlyph(char *data, GlyphMetrics *metrics)
 	return(length);
 }
 
-function void ParseGlyphMetrics(AtlasGlyphMetrics *atlas_metrics, char *data)
+internal void ParseGlyphMetrics(AtlasGlyphMetrics *atlas_metrics, char *data)
 {
 	for (U32 i = 32; i < 127; ++i)
 	{
@@ -214,7 +214,7 @@ function void ParseGlyphMetrics(AtlasGlyphMetrics *atlas_metrics, char *data)
 
 #define GLYPH_SIZE 10
 
-function void LoadGlyph(GlyphMetrics *metrics, R_Glyph *glyph, R_Texture *atlas)
+internal void LoadGlyph(GlyphMetrics *metrics, R_Glyph *glyph, R_Texture *atlas)
 {
 	R_Texture *texture = &glyph->texture;
 
@@ -253,7 +253,7 @@ function void LoadGlyph(GlyphMetrics *metrics, R_Glyph *glyph, R_Texture *atlas)
 	glyph->bearing.y = (S32)(metrics->plane_bounds.y0 * GLYPH_SIZE);
 }
 
-function void LoadFontFromMSDFAtlas(R_Font *font, AtlasGlyphMetrics *atlas_metrics, R_Texture *atlas)
+internal void LoadFontFromMSDFAtlas(R_Font *font, AtlasGlyphMetrics *atlas_metrics, R_Texture *atlas)
 {
 	for (U32 i = 32; i < 127; ++i)
 	{
@@ -288,7 +288,7 @@ function void LoadFontFromMSDFAtlas(R_Font *font, AtlasGlyphMetrics *atlas_metri
 	}
 }
 
-function void InitFontFromMSDFAtlas(R_Font *font, String8 atlas_path, String8 csv_path)
+internal void InitFontFromMSDFAtlas(R_Font *font, String8 atlas_path, String8 csv_path)
 {
 	R_Texture font_atlas = R_LoadTexture(atlas_path);
 

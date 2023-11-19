@@ -60,7 +60,7 @@ RECENT REVISION HISTORY:
       2.19  (2018-02-11) fix warning
       2.18  (2018-01-30) fix warnings
       2.17  (2018-01-29) bugfix, 1-bit BMP, 16-bitness query, fix warnings
-      2.16  (2017-07-23) all functions have 16-bit variants; optimizations; bugfixes
+      2.16  (2017-07-23) all internals have 16-bit variants; optimizations; bugfixes
       2.15  (2017-03-18) fix png-1,2,4; all Imagenet JPGs; no runtime SSE detection on GCC
       2.14  (2017-03-03) remove deprecated STBI_JPEG_OLD; fixes for Imagenet JPGs
       2.13  (2016-12-04) experimental 16-bit API, only for PNG so far; fixes
@@ -172,7 +172,7 @@ RECENT REVISION HISTORY:
 //       4           red, green, blue, alpha
 //
 // If image loading fails for any reason, the return value will be NULL,
-// and *x, *y, *channels_in_file will be unchanged. The function
+// and *x, *y, *channels_in_file will be unchanged. The internal
 // stbi_failure_reason() can be queried for an extremely brief, end-user
 // unfriendly explanation of why the load failed. Define STBI_NO_FAILURE_STRINGS
 // to avoid compiling these strings at all, and STBI_FAILURE_USERMSG to get slightly
@@ -181,7 +181,7 @@ RECENT REVISION HISTORY:
 // Paletted PNG, BMP, GIF, and PIC images are automatically depalettized.
 //
 // To query the width, height and component count of an image without having to
-// decode the full file, you can use the stbi_info family of functions:
+// decode the full file, you can use the stbi_info family of internals:
 //
 //   int x,y,n,ok;
 //   ok = stbi_info(filename, &x, &y, &n);
@@ -248,7 +248,7 @@ RECENT REVISION HISTORY:
 // through a small internal buffer (currently 128 bytes) to try to reduce
 // overhead.
 //
-// The three functions you must define are "read" (reads some bytes of data),
+// The three internals you must define are "read" (reads some bytes of data),
 // "skip" (skips some bytes of data), "eof" (reports if the stream is at the end).
 //
 // ===========================================================================
@@ -515,8 +515,8 @@ extern "C" {
   // flip the image vertically, so the first pixel in the output array is the bottom left
   STBIDEF void stbi_set_flip_vertically_on_load(int flag_true_if_should_flip);
 
-  // as above, but only applies to images loaded on the thread that calls the function
-  // this function is only available if your compiler supports thread-local variables;
+  // as above, but only applies to images loaded on the thread that calls the internal
+  // this internal is only available if your compiler supports thread-local variables;
   // calling it will fail to link if your compiler doesn't
   STBIDEF void stbi_set_unpremultiply_on_load_thread(int flag_true_if_should_unpremultiply);
   STBIDEF void stbi_convert_iphone_png_to_rgb_thread(int flag_true_if_should_convert);
@@ -696,7 +696,7 @@ typedef unsigned char validate_uint32[sizeof(stbi__uint32) == 4 ? 1 : -1];
 #if defined(__GNUC__) && defined(STBI__X86_TARGET) && !defined(__SSE2__) && !defined(STBI_NO_SIMD)
 // gcc doesn't support sse2 intrinsics unless you compile with -msse2,
 // which in turn means it gets to use SSE2 everywhere. This is unfortunate,
-// but previous attempts to provide the SSE2 functions with runtime
+// but previous attempts to provide the SSE2 internals with runtime
 // detection caused numerous issues. The way architecture extensions are
 // exposed in GCC/Clang is, sadly, not really suited for one-file libs.
 // New behavior: if compiled with -msse2, we use SSE2 without any
@@ -796,7 +796,7 @@ static int stbi__sse2_available(void)
 
 ///////////////////////////////////////////////
 //
-//  stbi__context struct and start_xxx functions
+//  stbi__context struct and start_xxx internals
 
 // stbi__context structure is our basic context used by all images, so it
 // contains all the IO context, plus some basic image information
@@ -992,7 +992,7 @@ static void *stbi__malloc(size_t size)
 // significant limitation for the intended use case.
 //
 // we do, however, need to make sure our size calculations don't
-// overflow. hence a few helper functions for size calculations that
+// overflow. hence a few helper internals for size calculations that
 // multiply integers together, making sure that they're non-negative
 // and no overflow occurs.
 
@@ -7309,7 +7309,7 @@ static stbi_uc *stbi__process_gif_raster(stbi__context *s, stbi__gif *g)
   }
 }
 
-// this function is designed to support animated gifs, although stb_image doesn't support it
+// this internal is designed to support animated gifs, although stb_image doesn't support it
 // two back is the image from two frames ago, used for a very specific disposal format
 static stbi_uc *stbi__gif_load_next(stbi__context *s, stbi__gif *g, int *comp, int req_comp, stbi_uc *two_back)
 {
@@ -8412,7 +8412,7 @@ STBIDEF int stbi_is_16_bit_from_callbacks(stbi_io_callbacks const *c, void *user
                          1-bit BMP
                          *_is_16_bit api
                          avoid warnings
-      2.16  (2017-07-23) all functions have 16-bit variants;
+      2.16  (2017-07-23) all internals have 16-bit variants;
                          STBI_NO_STDIO works again;
                          compilation fixes;
                          fix rounding in unpremultiply;
@@ -8443,7 +8443,7 @@ STBIDEF int stbi_is_16_bit_from_callbacks(stbi_io_callbacks const *c, void *user
       2.07  (2015-09-13) fix compiler warnings
                          partial animated GIF support
                          limited 16-bpc PSD support
-                         #ifdef unused functions
+                         #ifdef unused internals
                          bug with < 92 byte PIC,PNM,HDR,TGA
       2.06  (2015-04-19) fix bug where PSD returns wrong '*comp' value
       2.05  (2015-04-19) fix bug in progressive JPEG handling, fix warning
@@ -8503,12 +8503,12 @@ STBIDEF int stbi_is_16_bit_from_callbacks(stbi_io_callbacks const *c, void *user
       1.33  (2011-07-14)
               make stbi_is_hdr work in STBI_NO_HDR (as specified), minor compiler-friendly improvements
       1.32  (2011-07-13)
-              support for "info" function for all supported filetypes (SpartanJ)
+              support for "info" internal for all supported filetypes (SpartanJ)
       1.31  (2011-06-20)
               a few more leak fixes, bug in PNG handling (SpartanJ)
       1.30  (2011-06-11)
               added ability to load files via callbacks to accomidate custom input streams (Ben Wenger)
-              removed deprecated format-specific test/load functions
+              removed deprecated format-specific test/load internals
               removed support for installable file formats (stbi_loader) -- would have been broken for IO callbacks anyway
               error cases in bmp and tga give messages and don't leak (Raymond Barbiero, grisha)
               fix inefficiency in decoding 32-bit BMP (David Woo)
@@ -8525,7 +8525,7 @@ STBIDEF int stbi_is_16_bit_from_callbacks(stbi_io_callbacks const *c, void *user
       1.24  (2010-07-12)
               perf improvements reading from files on platforms with lock-heavy fgetc()
               minor perf improvements for jpeg
-              deprecated type-specific functions so we'll get feedback if they're needed
+              deprecated type-specific internals so we'll get feedback if they're needed
               attempt to fix trans_data warning (Won Chun)
       1.23    fixed bug in iPhone support
       1.22  (2010-07-10)
@@ -8558,7 +8558,7 @@ STBIDEF int stbi_is_16_bit_from_callbacks(stbi_io_callbacks const *c, void *user
       1.03    bugfixes to STBI_NO_STDIO, STBI_NO_HDR
       1.02    support for (subset of) HDR files, float interface for preferred access to them
       1.01    fix bug: possible bug in handling right-side up bmps... not sure
-              fix bug: the stbi__bmp_load() and stbi__tga_load() functions didn't work at all
+              fix bug: the stbi__bmp_load() and stbi__tga_load() internals didn't work at all
       1.00    interface to zlib that skips zlib header
       0.99    correct handling of alpha in palette
       0.98    TGA loader by lonesock; dynamically add loaders (untested)

@@ -1,6 +1,6 @@
-function S32 EntryPoint(String8List args);
+internal S32 EntryPoint(String8List args);
 
-function void
+internal void
 ParseCommandLineArguments(String8List *string_list, MemoryArena *arena, char *command_line)
 {
 	char *arg = command_line;

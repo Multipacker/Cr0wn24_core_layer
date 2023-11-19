@@ -15,7 +15,7 @@ It includes:
 - OS Layer (Windows only)
   -  Absraction layer over Win32
   -  Create a window & poll events
-  -  Load in OpenGL functions
+  -  Load in OpenGL internals
   -  Other miscellaneous features that you expect from the OS
 -  Renderer layer
    - 2D abstraction layer built on Direct3D11 and OpenGL (OpenGL not working at the current state)

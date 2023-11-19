@@ -39,8 +39,8 @@ extern "C" {
     ** glcorearb.h includes only APIs in the latest OpenGL core profile
     ** implementation together with APIs in newer ARB extensions which
     ** can be supported by the core profile. It does not, and never will
-    ** include functionality removed from the core profile, such as
-    ** fixed-function vertex and fragment processing.
+    ** include internalality removed from the core profile, such as
+    ** fixed-internal vertex and fragment processing.
     **
     ** Do not #include both <GL/glcorearb.h> and either of <GL/gl.h> or
     ** <GL/glext.h> in the same source file.
@@ -2235,7 +2235,7 @@ extern "C" {
 #define GL_COMPUTE_SHADER_BIT             0x00000020
 #define GL_DEBUG_OUTPUT_SYNCHRONOUS       0x8242
 #define GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH 0x8243
-#define GL_DEBUG_CALLBACK_FUNCTION        0x8244
+#define GL_DEBUG_CALLBACK_internal        0x8244
 #define GL_DEBUG_CALLBACK_USER_PARAM      0x8245
 #define GL_DEBUG_SOURCE_API               0x8246
 #define GL_DEBUG_SOURCE_WINDOW_SYSTEM     0x8247
@@ -3023,7 +3023,7 @@ extern "C" {
     typedef void (APIENTRY  *GLDEBUGPROCARB)(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam);
 #define GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB   0x8242
 #define GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH_ARB 0x8243
-#define GL_DEBUG_CALLBACK_FUNCTION_ARB    0x8244
+#define GL_DEBUG_CALLBACK_internal_ARB    0x8244
 #define GL_DEBUG_CALLBACK_USER_PARAM_ARB  0x8245
 #define GL_DEBUG_SOURCE_API_ARB           0x8246
 #define GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB 0x8247

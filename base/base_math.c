@@ -1,4 +1,4 @@
-function Vec2F32 V2(F32 x, F32 y)
+internal Vec2F32 V2(F32 x, F32 y)
 {
 	Vec2F32 result;
 	result.x = x;
@@ -6,7 +6,7 @@ function Vec2F32 V2(F32 x, F32 y)
 	return result;
 }
 
-function Vec2F32 V2MulF32(Vec2F32 vec, F32 f)
+internal Vec2F32 V2MulF32(Vec2F32 vec, F32 f)
 {
 	Vec2F32 result;
 
@@ -16,7 +16,7 @@ function Vec2F32 V2MulF32(Vec2F32 vec, F32 f)
 	return result;
 }
 
-function Vec2F32 V2DivF32(Vec2F32 vec, F32 f)
+internal Vec2F32 V2DivF32(Vec2F32 vec, F32 f)
 {
 	Vec2F32 result;
 
@@ -26,7 +26,7 @@ function Vec2F32 V2DivF32(Vec2F32 vec, F32 f)
 	return result;
 }
 
-function Vec2F32 V2AddV2(Vec2F32 vec0, Vec2F32 vec1)
+internal Vec2F32 V2AddV2(Vec2F32 vec0, Vec2F32 vec1)
 {
 	Vec2F32 result;
 
@@ -36,7 +36,7 @@ function Vec2F32 V2AddV2(Vec2F32 vec0, Vec2F32 vec1)
 	return result;
 }
 
-function Vec2F32 V2SubV2(Vec2F32 vec0, Vec2F32 vec1)
+internal Vec2F32 V2SubV2(Vec2F32 vec0, Vec2F32 vec1)
 {
 	Vec2F32 result;
 
@@ -45,7 +45,7 @@ function Vec2F32 V2SubV2(Vec2F32 vec0, Vec2F32 vec1)
 
 	return result;
 }
-function Vec2S32 V2S(S32 x, S32 y)
+internal Vec2S32 V2S(S32 x, S32 y)
 {
 	Vec2S32 result;
 	result.x = x;
@@ -53,7 +53,7 @@ function Vec2S32 V2S(S32 x, S32 y)
 	return result;
 }
 
-function Vec3F32 V3(F32 x, F32 y, F32 z)
+internal Vec3F32 V3(F32 x, F32 y, F32 z)
 {
 	Vec3F32 result;
 	result.x = x;
@@ -62,7 +62,7 @@ function Vec3F32 V3(F32 x, F32 y, F32 z)
 	return result;
 }
 
-function Vec4F32 V4(F32 x, F32 y, F32 z, F32 w)
+internal Vec4F32 V4(F32 x, F32 y, F32 z, F32 w)
 {
 	Vec4F32 result;
 	result.x = x;
@@ -72,7 +72,7 @@ function Vec4F32 V4(F32 x, F32 y, F32 z, F32 w)
 	return result;
 }
 
-function Vec4F32 V4MulF32(Vec4F32 vec, F32 f)
+internal Vec4F32 V4MulF32(Vec4F32 vec, F32 f)
 {
 	Vec4F32 result;
 	result.r = vec.r * f;
@@ -82,7 +82,7 @@ function Vec4F32 V4MulF32(Vec4F32 vec, F32 f)
 	return result;
 }
 
-function Vec4F32 V4Lerp(Vec4F32 a, Vec4F32 b, F32 t)
+internal Vec4F32 V4Lerp(Vec4F32 a, Vec4F32 b, F32 t)
 {
 	Vec4F32 result;
 	result.r = a.r * (1.0f - t) + b.r * t;
@@ -92,7 +92,7 @@ function Vec4F32 V4Lerp(Vec4F32 a, Vec4F32 b, F32 t)
 	return result;
 }
 
-function Mat4x4F32 Ortho(F32 left, F32 right, F32 bottom, F32 top, F32 _near, F32 _far)
+internal Mat4x4F32 Ortho(F32 left, F32 right, F32 bottom, F32 top, F32 _near, F32 _far)
 {
 	Mat4x4F32 result;
 
@@ -119,7 +119,7 @@ function Mat4x4F32 Ortho(F32 left, F32 right, F32 bottom, F32 top, F32 _near, F3
 	return result;
 }
 
-function F32 Radians(F32 degrees)
+internal F32 Radians(F32 degrees)
 {
 	F32 result = degrees;
 
@@ -128,7 +128,7 @@ function F32 Radians(F32 degrees)
 	return result;
 }
 
-function Mat4x4F32 M4(F32 d)
+internal Mat4x4F32 M4(F32 d)
 {
 	Mat4x4F32 result = {0};
 
@@ -140,7 +140,7 @@ function Mat4x4F32 M4(F32 d)
 	return result;
 }
 
-function Mat4x4F32 M4MulM4(Mat4x4F32 a, Mat4x4F32 b)
+internal Mat4x4F32 M4MulM4(Mat4x4F32 a, Mat4x4F32 b)
 {
 	Mat4x4F32 result = {
 		a.m[0][0] * b.m[0][0] + a.m[0][1] * b.m[1][0] + a.m[0][2] * b.m[2][0] + a.m[0][3] * b.m[3][0],
@@ -166,7 +166,7 @@ function Mat4x4F32 M4MulM4(Mat4x4F32 a, Mat4x4F32 b)
 	return result;
 }
 
-function Mat4x4F32 Translate(Mat4x4F32 mat, Vec3F32 trans)
+internal Mat4x4F32 Translate(Mat4x4F32 mat, Vec3F32 trans)
 {
 	Mat4x4F32 result = M4(1.0f);
 
@@ -179,7 +179,7 @@ function Mat4x4F32 Translate(Mat4x4F32 mat, Vec3F32 trans)
 	return result;
 }
 
-function Mat4x4F32 Scale(Mat4x4F32 mat, Vec3F32 scale)
+internal Mat4x4F32 Scale(Mat4x4F32 mat, Vec3F32 scale)
 {
 	Mat4x4F32 result = M4(1.0f);
 
@@ -192,7 +192,7 @@ function Mat4x4F32 Scale(Mat4x4F32 mat, Vec3F32 scale)
 	return result;
 }
 
-function F32 Smoothstep_F32(F32 edge0, F32 edge1, F32 x)
+internal F32 Smoothstep_F32(F32 edge0, F32 edge1, F32 x)
 {
 	// scale, and clamp x to 0..1 range
 	x = Clamp(0, (x - edge0) / (edge1 - edge0), 1.0f);

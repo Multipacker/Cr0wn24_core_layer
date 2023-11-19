@@ -1,10 +1,10 @@
 #ifndef WIN32_PLATFORM_H
 #define WIN32_PLATFORM_H
 
-#undef function
+#undef internal
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#define function static
+#define internal static
 
 #include <timeapi.h>
 
@@ -141,7 +141,7 @@ typedef struct OS_Library
 	void *handle;
 } OS_Library;
 
-function void OS_Init(MemoryArena permanent_arena);
-function void OS_DestroyWindow(OS_Window *window);
+internal void OS_Init(MemoryArena permanent_arena);
+internal void OS_DestroyWindow(OS_Window *window);
 
 #endif

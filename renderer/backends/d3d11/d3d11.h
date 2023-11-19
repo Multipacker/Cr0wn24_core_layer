@@ -50,6 +50,6 @@ typedef struct D3D11State
 	OS_Window *window;
 } D3D11State;
 
-function void D3D11_End();
+internal void D3D11_End();
 
 #endif

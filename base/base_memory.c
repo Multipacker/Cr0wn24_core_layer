@@ -2,7 +2,7 @@
 
 global MemoryArena scratch_arena_[2];
 
-function void CopySize_(U8 *dst, U8 *src, size_t size)
+internal void CopySize_(U8 *dst, U8 *src, size_t size)
 {
 	for(size_t i = 0; i < size;++i)
 	{
@@ -10,7 +10,7 @@ function void CopySize_(U8 *dst, U8 *src, size_t size)
 	}
 }
 
-function void ZeroSize_(U8 *base, size_t size)
+internal void ZeroSize_(U8 *base, size_t size)
 {
 	for(size_t i = 0; i < size;++i)
 	{
@@ -18,7 +18,7 @@ function void ZeroSize_(U8 *base, size_t size)
 	}
 }
 
-function void
+internal void
 ArenaInit(MemoryArena *arena, U8 *base, size_t size)
 {
 	arena->base = base;
@@ -26,12 +26,12 @@ ArenaInit(MemoryArena *arena, U8 *base, size_t size)
 	arena->pos = 0;
 }
 
-function void ArenaZero(MemoryArena *arena)
+internal void ArenaZero(MemoryArena *arena)
 {
 	arena->pos = 0;
 }
 
-function void *PushSize_(MemoryArena *arena, size_t size)
+internal void *PushSize_(MemoryArena *arena, size_t size)
 {
 	Assert(arena->pos + size <= arena->size);
 	void *result = arena->base + arena->pos;
@@ -39,14 +39,14 @@ function void *PushSize_(MemoryArena *arena, size_t size)
 	return result;
 }
 
-function void *PushSizeZero_(MemoryArena *arena, size_t size)
+internal void *PushSizeZero_(MemoryArena *arena, size_t size)
 {
 	void *result = PushSize_(arena, size);
 	ZeroSize(result, size);
 	return result;
 }
 
-function void *
+internal void *
 PushSizeCopy_(MemoryArena *arena, U8 *src, size_t size)
 {
 	void *result = PushSize_(arena, size);
@@ -55,12 +55,13 @@ PushSizeCopy_(MemoryArena *arena, U8 *src, size_t size)
 	return result;
 }
 
-function void ArenaPopTo(MemoryArena *arena, U64 pos)
+internal void ArenaPopTo(MemoryArena *arena, U64 pos)
 {
 	arena->pos = pos;
 }
 
-function TempMemoryArena BeginTempArena(MemoryArena *arena)
+internal TempMemoryArena
+BeginTempArena(MemoryArena *arena)
 {
 	TempMemoryArena temp;
 	temp.arena = arena;
@@ -68,12 +69,12 @@ function TempMemoryArena BeginTempArena(MemoryArena *arena)
 	return(temp);
 }
 
-function void EndTempArena(TempMemoryArena *temp)
+internal void EndTempArena(TempMemoryArena *temp)
 {
 	ArenaPopTo(temp->arena, temp->pos);
 }
 
-function TempMemoryArena
+internal TempMemoryArena
 GetScratch(MemoryArena **conflicts, U64 conflict_count)
 {
 	TempMemoryArena scratch = {0};

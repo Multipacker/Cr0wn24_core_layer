@@ -5,7 +5,7 @@
 #include "ext/glcorearb.h"
 #include "ext/wglext.h"
 
-#define GL_FUNCTIONS(X) \
+#define GL_internalS(X) \
 X(PFNGLDEBUGMESSAGECALLBACKARBPROC,     glDebugMessageCallback      ) \
 X(PFNGLGENBUFFERSPROC,                  glGenBuffers                ) \
 X(PFNGLGENVERTEXARRAYSPROC,             glGenVertexArrays           ) \
@@ -52,7 +52,7 @@ X(PFNGLGENERATEMIPMAPPROC,              glGenerateMipmap            ) \
 X(PFNGLDELETEPROGRAMPROC,               glDeleteProgram             ) \
 X(PFNGLDRAWARRAYSINSTANCEDPROC,         glDrawArraysInstanced       ) \
 
-function void OS_GL_CreateContext(OS_Window *window);
-function void OS_GL_GetWGLFunctions();
+internal void OS_GL_CreateContext(OS_Window *window);
+internal void OS_GL_GetWGLinternals();
 
 #endif

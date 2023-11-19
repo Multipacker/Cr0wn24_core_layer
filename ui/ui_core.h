@@ -393,7 +393,7 @@ typedef struct UI_State
 #define UI_PushEdgeSoftness(x)      (UI_PushRectStyle()->edge_softness = x)
 #define UI_PopEdgeSoftness()        (UI_PopRectStyle())
 
-// hampus: Helper functions
+// hampus: Helper internals
 
 #define UI_IsHot(box)       (UI_KeyMatch(box->key, ui_state.hot_key))
 #define UI_IsActive(box)    (UI_KeyMatch(box->key, ui_state.active_key))

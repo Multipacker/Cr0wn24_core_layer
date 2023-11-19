@@ -1,13 +1,14 @@
 #pragma comment(lib, "gdi32.lib")
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "kernel32.lib")
+#pragma comment(lib, "winmm.lib")
 
 global OS_State os_state;
 
-function void *OS_AllocMem(size_t size);
+internal void *OS_AllocMem(size_t size);
 
 MemoryArena core_memory_arena = {0};
-function void CoreInit()
+internal void CoreInit()
 {
 	srand((U32)time(0));
 
@@ -25,12 +26,12 @@ function void CoreInit()
 	OS_Init(os_permanent_arena);
 }
 
-function void CoreShutdown(OS_Window *window)
+internal void CoreShutdown(OS_Window *window)
 {
 	OS_DestroyWindow(window);
 }
 
-function void OS_Init(MemoryArena permanent_arena)
+internal void OS_Init(MemoryArena permanent_arena)
 {
 	os_state.permanent_arena = permanent_arena;
 
@@ -58,7 +59,7 @@ function void OS_Init(MemoryArena permanent_arena)
 	os_state.initialized = true;
 }
 
-function LRESULT CALLBACK OS_WindowProc(HWND window, UINT message, WPARAM wparam, LPARAM lparam)
+internal LRESULT CALLBACK OS_WindowProc(HWND window, UINT message, WPARAM wparam, LPARAM lparam)
 {
 	LRESULT result = 0;
 	switch(message)
@@ -102,7 +103,7 @@ function LRESULT CALLBACK OS_WindowProc(HWND window, UINT message, WPARAM wparam
 	return result;
 }
 
-function OS_Window *
+internal OS_Window *
 OS_CreateWindow(String8 title, S32 x, S32 y, S32 width, S32 height, B32 show_window)
 {
 	timeBeginPeriod(0);
@@ -140,23 +141,23 @@ OS_CreateWindow(String8 title, S32 x, S32 y, S32 width, S32 height, B32 show_win
 	// TODO(hampus): Make so that this actually 
 	// uses the width and height parameters
 	window->handle = CreateWindowExA(0, window_class.lpszClassName, (LPCSTR)title.str,
-																	 create_window_flags,
-																	 CW_USEDEFAULT, CW_USEDEFAULT,
-																	 CW_USEDEFAULT, CW_USEDEFAULT,
-																	 0, 0, instance, 0);
+									 create_window_flags,
+									 CW_USEDEFAULT, CW_USEDEFAULT,
+									 CW_USEDEFAULT, CW_USEDEFAULT,
+									 0, 0, instance, 0);
 
 	window->device_context = GetDC(window->handle);
 
 	return window;
 }
 
-function void
+internal void
 OS_ShowWindow(OS_Window *window, B32 show)
 {
 	ShowWindow(window->handle, show);
 }
 
-function void
+internal void
 OS_DestroyWindow(OS_Window *window)
 {
 	ReleaseDC(window->handle, window->device_context);
@@ -164,7 +165,7 @@ OS_DestroyWindow(OS_Window *window)
 	UnregisterClassA((LPCSTR)window->class_name.str, GetModuleHandle(0));
 }
 
-function void
+internal void
 OS_ToggleFullscreen(OS_Window *window)
 {
 	local_persist WINDOWPLACEMENT g_wpPrev = {sizeof(g_wpPrev)};
@@ -173,15 +174,15 @@ OS_ToggleFullscreen(OS_Window *window)
 	{
 		MONITORINFO MonitorInfo = {sizeof(MonitorInfo)};
 		if(GetWindowPlacement(window->handle, &g_wpPrev) &&
-			 GetMonitorInfo(MonitorFromWindow(window->handle, MONITOR_DEFAULTTOPRIMARY), &MonitorInfo))
+		   GetMonitorInfo(MonitorFromWindow(window->handle, MONITOR_DEFAULTTOPRIMARY), &MonitorInfo))
 		{
 			SetWindowLong(window->handle, GWL_STYLE, WindowStyle & ~WS_OVERLAPPEDWINDOW);
 
 			SetWindowPos(window->handle, HWND_TOP,
-									 MonitorInfo.rcMonitor.left, MonitorInfo.rcMonitor.top,
-									 MonitorInfo.rcMonitor.right - MonitorInfo.rcMonitor.left,
-									 MonitorInfo.rcMonitor.bottom - MonitorInfo.rcMonitor.top,
-									 SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+						 MonitorInfo.rcMonitor.left, MonitorInfo.rcMonitor.top,
+						 MonitorInfo.rcMonitor.right - MonitorInfo.rcMonitor.left,
+						 MonitorInfo.rcMonitor.bottom - MonitorInfo.rcMonitor.top,
+						 SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 		}
 	}
 	else
@@ -189,12 +190,12 @@ OS_ToggleFullscreen(OS_Window *window)
 		SetWindowLong(window->handle, GWL_STYLE, WindowStyle | WS_OVERLAPPEDWINDOW);
 		SetWindowPlacement(window->handle, &g_wpPrev);
 		SetWindowPos(window->handle, NULL, 0, 0, 0, 0,
-								 SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER |
-								 SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+					 SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER |
+					 SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 	}
 }
 
-function void OS_EatEvent(OS_EventList *event_list, OS_EventNode *node)
+internal void OS_EatEvent(OS_EventList *event_list, OS_EventNode *node)
 {
 	if(node == event_list->first)
 	{
@@ -214,7 +215,7 @@ function void OS_EatEvent(OS_EventList *event_list, OS_EventNode *node)
 	}
 }
 
-function OS_EventList *
+internal OS_EventList *
 OS_GatherEventsFromWindow(MemoryArena *arena)
 {
 	os_state.last_char = 0;
@@ -371,7 +372,7 @@ OS_GatherEventsFromWindow(MemoryArena *arena)
 	return event_list;
 }
 
-function void OS_QueryWindowSize(OS_Window *window, U32 *width, U32 *height)
+internal void OS_QueryWindowSize(OS_Window *window, U32 *width, U32 *height)
 {
 	RECT rect;
 	GetClientRect(window->handle, &rect);
@@ -379,22 +380,22 @@ function void OS_QueryWindowSize(OS_Window *window, U32 *width, U32 *height)
 	*height = rect.bottom - rect.top;
 }
 
-function void OS_SwapBuffers(OS_Window *window)
+internal void OS_SwapBuffers(OS_Window *window)
 {
 	SwapBuffers(window->device_context);
 }
 
-function char OS_GetLastChar()
+internal char OS_GetLastChar()
 {
 	return os_state.last_char;
 }
 
-function S32 OS_GetScroll()
+internal S32 OS_GetScroll()
 {
 	return os_state.scroll;
 }
 
-function OS_ReadFileResult OS_ReadEntireFile(String8 path)
+internal OS_ReadFileResult OS_ReadEntireFile(String8 path)
 {
 	OS_ReadFileResult result = {0};
 
@@ -436,14 +437,14 @@ function OS_ReadFileResult OS_ReadEntireFile(String8 path)
 	return result;
 }
 
-function F64 OS_SecondsSinceAppStart()
+internal F64 OS_SecondsSinceAppStart()
 {
 	LARGE_INTEGER counter = {0};
 	QueryPerformanceCounter(&counter);
 	return((F64)counter.QuadPart - (F64)os_state.start_counter.QuadPart) / os_state.freq;
 }
 
-function void *OS_AllocMem(size_t size)
+internal void *OS_AllocMem(size_t size)
 {
 	void *result = 0;
 
@@ -452,7 +453,7 @@ function void *OS_AllocMem(size_t size)
 	return result;
 }
 
-function void OS_FreeMemory(void *memory)
+internal void OS_FreeMemory(void *memory)
 {
 	if(memory)
 	{
@@ -460,7 +461,7 @@ function void OS_FreeMemory(void *memory)
 	}
 }
 
-function OS_Library OS_LoadLibrary(String8 library_name)
+internal OS_Library OS_LoadLibrary(String8 library_name)
 {
 	OS_Library result = {0};
 
@@ -469,36 +470,36 @@ function OS_Library OS_LoadLibrary(String8 library_name)
 	return(result);
 }
 
-function void OS_FreeLibrary(OS_Library *library)
+internal void OS_FreeLibrary(OS_Library *library)
 {
 	FreeLibrary(library->handle);
 	library->handle = 0;
 }
 
-function void *OS_LoadFunction(OS_Library library, String8 function_name)
+internal void *OS_Loadinternal(OS_Library library, String8 internal_name)
 {
 	void *result = 0;
-	result = GetProcAddress((HMODULE)library.handle, (LPCSTR)function_name.str);
+	result = GetProcAddress((HMODULE)library.handle, (LPCSTR)internal_name.str);
 	return result;
 }
 
 // TODO(hampus): Move this onto the base layer!
-function B32 SameTime(Time *a, Time *b)
+internal B32 SameTime(Time *a, Time *b)
 {
 	return(a->year == b->year &&
-				 a->month == b->month &&
-				 a->day == b->day &&
-				 a->hour == b->hour &&
-				 a->minute == b->minute &&
-				 a->second == b->second);
+		   a->month == b->month &&
+		   a->day == b->day &&
+		   a->hour == b->hour &&
+		   a->minute == b->minute &&
+		   a->second == b->second);
 }
 
-function void OS_CopyFile(String8 dst, String8 src)
+internal void OS_CopyFile(String8 dst, String8 src)
 {
 	CopyFileA((LPCSTR)src.str, (LPCSTR)dst.str, FALSE);
 }
 
-function Time OS_SystemTimeToTime(SYSTEMTIME *time)
+internal Time OS_SystemTimeToTime(SYSTEMTIME *time)
 {
 	Time result;
 
@@ -514,7 +515,7 @@ function Time OS_SystemTimeToTime(SYSTEMTIME *time)
 	return(result);
 }
 
-function Time OS_GetLastWriteTime(String8 file_name)
+internal Time OS_GetLastWriteTime(String8 file_name)
 {
 	Time result = {0};
 
@@ -536,12 +537,12 @@ function Time OS_GetLastWriteTime(String8 file_name)
 	return(result);
 }
 
-function void OS_Sleep(U32 milliseconds)
+internal void OS_Sleep(U32 milliseconds)
 {
 	Sleep(milliseconds);
 }
 
-function Time OS_GetLocalTime()
+internal Time OS_GetLocalTime()
 {
 	Time result;
 	SYSTEMTIME time;
@@ -550,7 +551,7 @@ function Time OS_GetLocalTime()
 	return(result);
 }
 
-function Vec2F32 OS_GetMousePos(OS_Window *window)
+internal Vec2F32 OS_GetMousePos(OS_Window *window)
 {
 	POINT point;
 	GetCursorPos(&point);
@@ -561,7 +562,7 @@ function Vec2F32 OS_GetMousePos(OS_Window *window)
 	return(result);
 }
 
-function void OS_SetHoverCursor(OS_Cursor type)
+internal void OS_SetHoverCursor(OS_Cursor type)
 {
 	SetCursor(os_state.cursors[type]);
 }

@@ -18,9 +18,9 @@ typedef struct OpenGL
 	ShaderProgram shader_program;
 } OpenGL;
 
-function U32 R_GL_GenerateTextureHandle(R_Texture *texture);
-function void R_GL_UpdateTextureHandle(R_Texture *texture);
-function void R_GL_End(OS_Window *window);
-function void R_GL_Begin(OS_Window *window, MemoryArena *frame_arena);
+internal U32 R_GL_GenerateTextureHandle(R_Texture *texture);
+internal void R_GL_UpdateTextureHandle(R_Texture *texture);
+internal void R_GL_End(OS_Window *window);
+internal void R_GL_Begin(OS_Window *window, MemoryArena *frame_arena);
 
 #endif
