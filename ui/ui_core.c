@@ -389,7 +389,7 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 	B32 capture_input = false;
 
 	if(!ui_state.inside_popup ||
-	   ui_state.building_popup)
+		 ui_state.building_popup)
 	{
 		if(!previous_still_active)
 		{
@@ -406,8 +406,8 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 		result.hovering = true;
 		ui_state.hot_key = box->key;
 		for(OS_EventNode *node = event_list->first;
-			node != 0;
-			node = node->next)
+				node != 0;
+				node = node->next)
 		{
 			OS_Event event = node->event;
 			switch(event.type)
@@ -441,8 +441,8 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 	if(UI_IsFocused(box))
 	{
 		for(OS_EventNode *node = event_list->first;
-			node != 0;
-			node = node->next)
+				node != 0;
+				node = node->next)
 		{
 			OS_Event event = node->event;
 			switch(event.type)
@@ -450,7 +450,7 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 				case OS_EventType_KeyPress:
 				{
 					if(event.key == OS_Key_Return ||
-					   event.key == OS_Key_Escape)
+						 event.key == OS_Key_Escape)
 					{
 						result.enter = true;
 						OS_EatEvent(event_list, node);
@@ -540,8 +540,8 @@ internal UI_Box *UI_BoxFromKey(UI_Key key)
 	{
 		U64 slot_index = key.key % ui_state.box_hash_map_count;
 		for(result = ui_state.box_hash_map[slot_index];
-			result != 0;
-			result = result->hash_next)
+				result != 0;
+				result = result->hash_next)
 		{
 			if(UI_KeyMatch(key, result->key))
 			{
@@ -798,7 +798,7 @@ internal void UI_Begin(UI_Theme theme, S32 font_size, OS_EventList *os_event_lis
 			if(!(box->flags & UI_BoxFlag_SaveState))
 			{
 				if(box->last_frame_touched_index < (ui_state.frame - 1) ||
-				   UI_KeyIsNull(box->key))
+					 UI_KeyIsNull(box->key))
 				{
 
 					if(box == ui_state.box_hash_map[i])
@@ -868,9 +868,9 @@ internal void UI_Begin(UI_Theme theme, S32 font_size, OS_EventList *os_event_lis
 
 	rect_style->border_thickness = 0.5f;
 	rect_style->corner_radius = V4(corner_radius,
-								   corner_radius,
-								   corner_radius,
-								   corner_radius);
+																 corner_radius,
+																 corner_radius,
+																 corner_radius);
 	rect_style->edge_softness = 1.0f;
 
 	UI_CreateRootParent();
@@ -962,8 +962,8 @@ internal void UI_SolveIndependentSizes(UI_Box *root)
 	}
 
 	for(UI_Box *child = root->first;
-		child != 0;
-		child = child->next)
+			child != 0;
+			child = child->next)
 	{
 		UI_SolveIndependentSizes(child);
 	}
@@ -1003,8 +1003,8 @@ internal void UI_SolveFill(UI_Box *root)
 	}
 
 	for(UI_Box *child = root->first;
-		child != 0;
-		child = child->next)
+			child != 0;
+			child = child->next)
 	{
 		UI_SolveFill(child);
 	}
@@ -1027,8 +1027,8 @@ internal void UI_SolveUpwardsDependentSizes(UI_Box *root)
 			else
 			{
 				Assert(root->parent->semantic_size[axis].kind == UI_SizeKind_Pixels ||
-					   root->parent->semantic_size[axis].kind == UI_SizeKind_TextContent ||
-					   root->parent->semantic_size[axis].kind == UI_SizeKind_Pct);
+							 root->parent->semantic_size[axis].kind == UI_SizeKind_TextContent ||
+							 root->parent->semantic_size[axis].kind == UI_SizeKind_Pct);
 				parent_size = root->parent->target_size[axis];
 			}
 
@@ -1037,8 +1037,8 @@ internal void UI_SolveUpwardsDependentSizes(UI_Box *root)
 	}
 
 	for(UI_Box *child = root->first;
-		child != 0;
-		child = child->next)
+			child != 0;
+			child = child->next)
 	{
 		UI_SolveUpwardsDependentSizes(child);
 	}
@@ -1048,11 +1048,11 @@ internal Vec2F32 UI_SolveDownwardDependentSizes(UI_Box *root)
 {
 	Vec2F32 result = {0};
 	if(root->semantic_size[Axis2_X].kind == UI_SizeKind_SumOfChildren ||
-	   root->semantic_size[Axis2_Y].kind == UI_SizeKind_SumOfChildren)
+		 root->semantic_size[Axis2_Y].kind == UI_SizeKind_SumOfChildren)
 	{
 		for(UI_Box *child = root->first;
-			child != 0;
-			child = child->next)
+				child != 0;
+				child = child->next)
 		{
 			Vec2F32 size = UI_SolveDownwardDependentSizes(child);
 			F32 child_computed_size[2];
@@ -1085,8 +1085,8 @@ internal Vec2F32 UI_SolveDownwardDependentSizes(UI_Box *root)
 	else
 	{
 		for(UI_Box *child = root->first;
-			child != 0;
-			child = child->next)
+				child != 0;
+				child = child->next)
 		{
 			UI_SolveDownwardDependentSizes(child);
 		}
@@ -1110,8 +1110,8 @@ internal void UI_CalculateFinalRect(UI_Box *root)
 				// NOTE(hampus): Find the previous box without a fixed pos.
 				UI_Box *prev = 0;
 				for(prev = root->prev;
-					prev != 0;
-					prev = prev->prev)
+						prev != 0;
+						prev = prev->prev)
 				{
 					if(!(prev->flags & (UI_BoxFlag_FixedX << axis)))
 					{
@@ -1264,8 +1264,8 @@ internal void UI_CalculateFinalRect(UI_Box *root)
 	root->calc_rect.max = V2AddV2(root->calc_rect.min, V2(root->calc_size[Axis2_X], root->calc_size[Axis2_Y]));
 
 	for(UI_Box *child = root->first;
-		child != 0;
-		child = child->next)
+			child != 0;
+			child = child->next)
 	{
 		UI_CalculateFinalRect(child);
 	}
@@ -1326,8 +1326,8 @@ internal void UI_Animate(UI_Box *root, F32 dt)
 	root->active_t = Clamp(0.0f, root->hot_t, 1.0f);
 
 	for(UI_Box *child = root->first;
-		child != 0;
-		child = child->next)
+			child != 0;
+			child = child->next)
 	{
 		UI_Animate(child, dt);
 	}
@@ -1347,10 +1347,10 @@ internal void UI_Draw(UI_Box *root)
 	{
 
 		R_PushRect(V2SubV2(root->calc_rect.min, V2(10, 10)),
-				   V2AddV2(root->calc_rect.max, V2(15, 15)),
-				   .color = V4(0, 0, 0, 0.5f),
-				   .edge_softness = 10.0f,
-				   .corner_radius = corner_radius);
+							 V2AddV2(root->calc_rect.max, V2(15, 15)),
+							 .color = V4(0, 0, 0, 0.5f),
+							 .edge_softness = 10.0f,
+							 .corner_radius = corner_radius);
 
 	}
 
@@ -1359,20 +1359,20 @@ internal void UI_Draw(UI_Box *root)
 		Vec4F32 color = rect_style->background_color;
 
 		if((root->flags & UI_BoxFlag_ActiveAnimation) &&
-		   UI_IsActive(root))
+			 UI_IsActive(root))
 		{
 			color = rect_style->active_color;
 		}
 		else if(root->flags & UI_BoxFlag_HotAnimation &&
-				UI_IsHot(root))
+						UI_IsHot(root))
 		{
 			color = rect_style->hot_color;
 		}
 
 		R_PushRect(root->calc_rect.min, root->calc_rect.max,
-				   .color = color,
-				   .corner_radius = corner_radius,
-				   .edge_softness = rect_style->edge_softness);
+							 .color = color,
+							 .corner_radius = corner_radius,
+							 .edge_softness = rect_style->edge_softness);
 	}
 
 	if(root->flags & UI_BoxFlag_DrawBorder)
@@ -1381,18 +1381,18 @@ internal void UI_Draw(UI_Box *root)
 		{
 			F32 t = (F32)sin(OS_SecondsSinceAppStart() * 5);
 			R_PushRect(root->calc_rect.min, root->calc_rect.max,
-					   .corner_radius = corner_radius,
-					   .border_thickness = rect_style->border_thickness,
-					   .color = V4(0.8f + 0.2f * t, 0.8f + 0.2f * t, 0.0f, 1.0f),
-					   .edge_softness = 1.0f);
+								 .corner_radius = corner_radius,
+								 .border_thickness = rect_style->border_thickness,
+								 .color = V4(0.8f + 0.2f * t, 0.8f + 0.2f * t, 0.0f, 1.0f),
+								 .edge_softness = 1.0f);
 		}
 		else
 		{
 			R_PushRect(root->calc_rect.min, root->calc_rect.max,
-					   .corner_radius = corner_radius,
-					   .border_thickness = rect_style->border_thickness,
-					   .color = rect_style->border_color,
-					   .edge_softness = 1.0f);
+								 .corner_radius = corner_radius,
+								 .border_thickness = rect_style->border_thickness,
+								 .color = rect_style->border_color,
+								 .edge_softness = 1.0f);
 		}
 	}
 
@@ -1411,7 +1411,7 @@ internal void UI_Draw(UI_Box *root)
 
 #if 1
 			R_PushGlyphIndex(UI_AlignDimInRect(glyph_dim, root->calc_rect, text_style->text_align, padding),
-							 text_style->font_size, ui_state.font, text_style->icon, V4(1.0f, 1.0f, 1.0f, 1.0f));
+											 text_style->font_size, ui_state.font, text_style->icon, V4(1.0f, 1.0f, 1.0f, 1.0f));
 #endif
 		}
 		else
@@ -1425,25 +1425,25 @@ internal void UI_Draw(UI_Box *root)
 			};
 
 			R_PushText(UI_AlignDimInRect(text_dim, root->calc_rect, text_style->text_align, padding),
-					   text_style->font_size,
-					   ui_state.font,
-					   root->display_string,
-					   text_style->text_color);
+								 text_style->font_size,
+								 ui_state.font,
+								 root->display_string,
+								 text_style->text_color);
 		}
 	}
 
 	if(ui_state.show_debug_lines)
 	{
 		R_PushRect(root->calc_rect.min, root->calc_rect.max,
-				   .border_thickness = 1.0f,
-				   .color = V4(1.0f, 0.0f, 1.0f, 1.0f));
+							 .border_thickness = 1.0f,
+							 .color = V4(1.0f, 0.0f, 1.0f, 1.0f));
 	}
 
 	R_PopClipRect();
 
 	for(UI_Box *child = root->first;
-		child != 0;
-		child = child->next)
+			child != 0;
+			child = child->next)
 	{
 		UI_Draw(child);
 	}

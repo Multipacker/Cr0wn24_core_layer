@@ -1,9 +1,10 @@
 @echo off
 
-set ft_root=..\external\freetype\
+set core_layer_root=%1
 
-set ft_files=
-set ft_files=%ft_files% %ft_root%\src\base\ftsystem.c
+set ft_root=%core_layer_root%\external\freetype\
+
+set ft_files=%ft_root%\src\base\ftsystem.c
 set ft_files=%ft_files% %ft_root%\src\base\ftinit.c
 set ft_files=%ft_files% %ft_root%\src\base\ftdebug.c
 set ft_files=%ft_files% %ft_root%\src\base\ftbase.c

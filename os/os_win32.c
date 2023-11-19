@@ -141,10 +141,10 @@ OS_CreateWindow(String8 title, S32 x, S32 y, S32 width, S32 height, B32 show_win
 	// TODO(hampus): Make so that this actually 
 	// uses the width and height parameters
 	window->handle = CreateWindowExA(0, window_class.lpszClassName, (LPCSTR)title.str,
-									 create_window_flags,
-									 CW_USEDEFAULT, CW_USEDEFAULT,
-									 CW_USEDEFAULT, CW_USEDEFAULT,
-									 0, 0, instance, 0);
+																	 create_window_flags,
+																	 CW_USEDEFAULT, CW_USEDEFAULT,
+																	 CW_USEDEFAULT, CW_USEDEFAULT,
+																	 0, 0, instance, 0);
 
 	window->device_context = GetDC(window->handle);
 
@@ -174,15 +174,15 @@ OS_ToggleFullscreen(OS_Window *window)
 	{
 		MONITORINFO MonitorInfo = {sizeof(MonitorInfo)};
 		if(GetWindowPlacement(window->handle, &g_wpPrev) &&
-		   GetMonitorInfo(MonitorFromWindow(window->handle, MONITOR_DEFAULTTOPRIMARY), &MonitorInfo))
+			 GetMonitorInfo(MonitorFromWindow(window->handle, MONITOR_DEFAULTTOPRIMARY), &MonitorInfo))
 		{
 			SetWindowLong(window->handle, GWL_STYLE, WindowStyle & ~WS_OVERLAPPEDWINDOW);
 
 			SetWindowPos(window->handle, HWND_TOP,
-						 MonitorInfo.rcMonitor.left, MonitorInfo.rcMonitor.top,
-						 MonitorInfo.rcMonitor.right - MonitorInfo.rcMonitor.left,
-						 MonitorInfo.rcMonitor.bottom - MonitorInfo.rcMonitor.top,
-						 SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+									 MonitorInfo.rcMonitor.left, MonitorInfo.rcMonitor.top,
+									 MonitorInfo.rcMonitor.right - MonitorInfo.rcMonitor.left,
+									 MonitorInfo.rcMonitor.bottom - MonitorInfo.rcMonitor.top,
+									 SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 		}
 	}
 	else
@@ -190,8 +190,8 @@ OS_ToggleFullscreen(OS_Window *window)
 		SetWindowLong(window->handle, GWL_STYLE, WindowStyle | WS_OVERLAPPEDWINDOW);
 		SetWindowPlacement(window->handle, &g_wpPrev);
 		SetWindowPos(window->handle, NULL, 0, 0, 0, 0,
-					 SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER |
-					 SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+								 SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER |
+								 SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
 	}
 }
 
@@ -487,11 +487,11 @@ internal void *OS_Loadinternal(OS_Library library, String8 internal_name)
 internal B32 SameTime(Time *a, Time *b)
 {
 	return(a->year == b->year &&
-		   a->month == b->month &&
-		   a->day == b->day &&
-		   a->hour == b->hour &&
-		   a->minute == b->minute &&
-		   a->second == b->second);
+				 a->month == b->month &&
+				 a->day == b->day &&
+				 a->hour == b->hour &&
+				 a->minute == b->minute &&
+				 a->second == b->second);
 }
 
 internal void OS_CopyFile(String8 dst, String8 src)
@@ -542,7 +542,8 @@ internal void OS_Sleep(U32 milliseconds)
 	Sleep(milliseconds);
 }
 
-internal Time OS_GetLocalTime()
+internal Time
+OS_GetLocalTime()
 {
 	Time result;
 	SYSTEMTIME time;
@@ -551,7 +552,8 @@ internal Time OS_GetLocalTime()
 	return(result);
 }
 
-internal Vec2F32 OS_GetMousePos(OS_Window *window)
+internal Vec2F32
+OS_GetMousePos(OS_Window *window)
 {
 	POINT point;
 	GetCursorPos(&point);
@@ -562,7 +564,8 @@ internal Vec2F32 OS_GetMousePos(OS_Window *window)
 	return(result);
 }
 
-internal void OS_SetHoverCursor(OS_Cursor type)
+internal void
+OS_SetHoverCursor(OS_Cursor type)
 {
 	SetCursor(os_state.cursors[type]);
 }
