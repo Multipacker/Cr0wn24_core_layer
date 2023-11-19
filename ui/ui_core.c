@@ -725,8 +725,10 @@ internal void UI_CreateRootParent()
 
 // hampus: Initialization and begin/end of ui frame
 
-internal void UI_Begin(UI_Theme theme, S32 font_size, OS_EventList *os_event_list)
+internal void UI_Begin(UI_Theme theme, S32 font_size, OS_EventList *os_event_list, F64 dt)
 {
+	ui_state.dt = dt;
+
 	ui_state.os_event_list = os_event_list;
 
 	ui_state.mouse_pos = OS_GetMousePos(ui_state.window);

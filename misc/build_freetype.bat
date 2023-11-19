@@ -21,7 +21,7 @@ set ft_files=%ft_files% %ft_root%\src\smooth\smooth.c
 if not exist ..\build\ mkdir ..\build\
 pushd ..\build\
 
-cl -c %ft_files% /Fo -I%ft_root% -I%ft_root%\include -Zi -Od -DFT_CONFIG_OPTION_ERROR_STRINGS -DFT2_BUILD_LIBRARY
+cl -c -nologo -Zi -Od %ft_files% /Fo -I%ft_root% -I%ft_root%\include -DFT_CONFIG_OPTION_ERROR_STRINGS -DFT2_BUILD_LIBRARY
 
 lib *.obj -OUT:freetype.lib
 

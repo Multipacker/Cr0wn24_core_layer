@@ -19,14 +19,14 @@ UITest()
 	UI_NextRelativePos2(300, 300);
 	UI_NextBackgroundColor(ui_state.theme.window_color);
 	UI_Box *box2 = UI_BoxMake(UI_BoxFlag_DrawBackground |
-							  UI_BoxFlag_DrawBorder |
-							  UI_BoxFlag_DrawDropShadow |
-							  UI_BoxFlag_FixedX |
-							  UI_BoxFlag_FixedY |
-							  UI_BoxFlag_AnimateWidth |
-							  UI_BoxFlag_AnimateHeight |
-							  UI_BoxFlag_Clip,
-							  Str8Lit("My box2"));
+														UI_BoxFlag_DrawBorder |
+														UI_BoxFlag_DrawDropShadow |
+														UI_BoxFlag_FixedX |
+														UI_BoxFlag_FixedY |
+														UI_BoxFlag_AnimateWidth |
+														UI_BoxFlag_AnimateHeight |
+														UI_BoxFlag_Clip,
+														Str8Lit("My box2"));
 	UI_Size tree_spacing = UI_Em(0.3f);
 
 	local_persist Vec4F32 color_test = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -233,7 +233,7 @@ EntryPoint(String8List args)
 			}
 
 			loaded_bitmaps[i].data = stbi_load((const char *)path.str,
-											   &loaded_bitmaps[i].dim.width, &loaded_bitmaps[i].dim.height, &channels, 0);
+																				 &loaded_bitmaps[i].dim.width, &loaded_bitmaps[i].dim.height, &channels, 0);
 		}
 		ReleaseScratch(scratch);
 
@@ -261,8 +261,8 @@ EntryPoint(String8List args)
 		OS_EventList *event_list = OS_GatherEventsFromWindow(scratch.arena);
 
 		for(OS_EventNode *node = event_list->first;
-			node != 0;
-			node = node->next)
+				node != 0;
+				node = node->next)
 		{
 			switch(node->event.type)
 			{
@@ -296,20 +296,17 @@ EntryPoint(String8List args)
 		R_PushRect(V2(50, 500), V2(500, 1000), .color = V4(0, 0, 0, 1), .corner_radius = corner_radius, .edge_softness = 1);
 		R_PushRect(V2(50, 500), V2(500, 1000), .color = V4(1, 0, 0, 1), .corner_radius = corner_radius, .edge_softness = 1, .border_thickness = 0.5f);
 
-		UI_Begin(UI_DefaultTheme(), 20, event_list);
-#if 1
+		UI_Begin(UI_DefaultTheme(), 20, event_list, dt);
 
 		UITest();
 
-#endif
 		UI_End();
+
 		R_End();
 
 		F64 end_counter = OS_SecondsSinceAppStart();
 		dt = end_counter - start_counter;
 		start_counter = end_counter;
-
-		ui_state.dt = dt;
 
 		ReleaseScratch(scratch);
 	}
