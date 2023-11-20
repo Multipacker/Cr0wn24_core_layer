@@ -1,7 +1,7 @@
 #ifndef UI_INC_H
 #define UI_INC_H
 
-#include "ui_core.h"
-#include "ui_widgets.h"
+#include "core_layer/ui/ui_core.h"
+#include "core_layer/ui/ui_widgets.h"
 
 #endif

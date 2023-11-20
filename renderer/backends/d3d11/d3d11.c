@@ -105,8 +105,8 @@ D3D11_Init(OS_Window *window)
 			{"EXTRA_PARAMS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, MemberOffset(Rect, edge_softness), D3D11_INPUT_PER_INSTANCE_DATA, 1},
 		};
 
-#include "../renderer/backends/d3d11/d3d11_vshader.h"
-#include "../renderer/backends/d3d11/d3d11_pshader.h"
+#include "core_layer/renderer/backends/d3d11/d3d11_vshader.h"
+#include "core_layer/renderer/backends/d3d11/d3d11_pshader.h"
 
 		ID3D11Device_CreateVertexShader(d3d11_state.device, d3d11_vshader, sizeof(d3d11_vshader), 0, &d3d11_state.v_shader);
 		ID3D11Device_CreatePixelShader(d3d11_state.device, d3d11_pshader, sizeof(d3d11_pshader), 0, &d3d11_state.p_shader);
