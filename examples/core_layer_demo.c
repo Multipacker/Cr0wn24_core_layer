@@ -19,7 +19,7 @@ UITest()
 	UI_NextSize2(UI_Em(40.0f), UI_SumOfChildren());
 	UI_NextChildLayoutAxis(Axis2_X);
 	UI_NextRelativePos2(300, 300);
-	UI_NextBackgroundColor(ui_state.theme.window_color);
+	UI_NextBackgroundColor(ui_state->theme.window_color);
 	UI_Box *box2 = UI_BoxMake(UI_BoxFlag_DrawBackground |
 														UI_BoxFlag_DrawBorder |
 														UI_BoxFlag_DrawDropShadow |
@@ -44,7 +44,7 @@ UITest()
 			UI_Spacer(UI_Em(0.2f));
 
 			UI_NextSize2(UI_Em(5.0f), UI_Pixels(1));
-			UI_NextBackgroundColor(ui_state.theme.text_color);
+			UI_NextBackgroundColor(ui_state->theme.text_color);
 			UI_BoxMake(UI_BoxFlag_DrawBackground, Str8Lit(""));
 			UI_Spacer(UI_Em(0.5f));
 
@@ -69,7 +69,7 @@ UITest()
 			UI_Divider();
 
 			UI_Spacer(UI_Em(0.5f));
-			UI_Check(Str8Lit("Show debug lines"), &ui_state.show_debug_lines);
+			UI_Check(Str8Lit("Show debug lines"), &ui_state->show_debug_lines);
 			UI_Spacer(UI_Em(0.5f));
 
 			local_persist B32 check_value2 = false;
@@ -110,7 +110,7 @@ UITest()
 			UI_Spacer(UI_Em(0.2f));
 
 			UI_NextSize2(UI_Em(5.0f), UI_Pixels(1));
-			UI_NextBackgroundColor(ui_state.theme.text_color);
+			UI_NextBackgroundColor(ui_state->theme.text_color);
 			UI_BoxMake(UI_BoxFlag_DrawBackground, Str8Lit(""));
 			UI_Spacer(UI_Em(0.5f));
 

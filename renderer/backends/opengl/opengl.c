@@ -92,12 +92,12 @@ R_GL_CreateShader(String8 vertex_shader_path, String8 fragment_shader_path, B32 
 internal void R_GL_Begin(OS_Window *window, MemoryArena *frame_arena)
 {
 	U32 num_indices_per_rect = 6;
-	r_state.num_rects = 0;
-	r_state.max_num_rects = 1'000'000;
-	r_state.rect_instances = PushArrayNoZero(frame_arena, r_state.max_num_rects, R_RectInstance);
-	r_state.rect_indices = PushArrayNoZero(frame_arena, r_state.max_num_rects * num_indices_per_rect, U32);
+	r_state->num_rects = 0;
+	r_state->max_num_rects = 1'000'000;
+	r_state->rect_instances = PushArrayNoZero(frame_arena, r_state->max_num_rects, R_RectInstance);
+	r_state->rect_indices = PushArrayNoZero(frame_arena, r_state->max_num_rects * num_indices_per_rect, U32);
 
-	OS_QueryWindowSize(window, &r_state.settings.render_dim.x, &r_state.settings.render_dim.y);
+	OS_QueryWindowSize(window, &r_state->settings.render_dim.x, &r_state->settings.render_dim.y);
 
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -112,21 +112,21 @@ internal void R_GL_End(OS_Window *window)
 	glBindVertexArray(open_gl.vao);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, open_gl.texture_array);
 
-	Mat4x4F32 proj = Ortho(0, (F32)r_state.settings.render_dim.x, (F32)r_state.settings.render_dim.y, 0, -1.0f, 1.0f);
+	Mat4x4F32 proj = Ortho(0, (F32)r_state->settings.render_dim.x, (F32)r_state->settings.render_dim.y, 0, -1.0f, 1.0f);
 
 	GLuint proj_loc = glGetUniformLocation(open_gl.shader_program.id, "u_projection");
 	glUniformMatrix4fv(proj_loc, 1, GL_TRUE, &proj.m[0][0]);
 
 	GLuint clip_rect_loc = glGetUniformLocation(open_gl.shader_program.id, "u_clip_rects");
-	glUniforMat4x4F32fv(clip_rect_loc, r_state.max_num_clip_rects, (GLfloat *)r_state.clip_rect_array);
+	glUniforMat4x4F32fv(clip_rect_loc, r_state->max_num_clip_rects, (GLfloat *)r_state->clip_rect_array);
 
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(R_RectInstance) * r_state.num_rects, r_state.rect_instances);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(R_RectInstance) * r_state->num_rects, r_state->rect_instances);
 
-	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(U32) * 6 * r_state.num_rects, r_state.rect_indices);
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(U32) * 6 * r_state->num_rects, r_state->rect_indices);
 
-	glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, r_state.num_rects);
+	glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, r_state->num_rects);
 
-	R_TextureQueue *texture_queue = &r_state.texture_queue;
+	R_TextureQueue *texture_queue = &r_state->texture_queue;
 	for(R_TextureNode *node = texture_queue->first;
 			node != 0;
 			node = QueuePop(texture_queue->first, texture_queue->last))
@@ -145,7 +145,7 @@ internal void R_GL_End(OS_Window *window)
 
 internal void R_GL_Init()
 {
-	r_state.max_num_rects = 1'000'000;
+	r_state->max_num_rects = 1'000'000;
 
 	open_gl.shader_program = R_GL_CreateShader(CORE_RESOURCE("shaders/vertex_shader.vert"),
 																						 CORE_RESOURCE("shaders/fragment_shader.frag"), true);
@@ -155,11 +155,11 @@ internal void R_GL_Init()
 	glGenBuffers(1, &open_gl.vbo);
 
 	glBindBuffer(GL_ARRAY_BUFFER, open_gl.vbo);
-	glBufferData(GL_ARRAY_BUFFER, r_state.max_num_rects * sizeof(R_RectInstance), 0, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, r_state->max_num_rects * sizeof(R_RectInstance), 0, GL_DYNAMIC_DRAW);
 
 	glGenBuffers(1, &open_gl.ebo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, open_gl.ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, r_state.max_num_rects * sizeof(U32) * 6, 0, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, r_state->max_num_rects * sizeof(U32) * 6, 0, GL_DYNAMIC_DRAW);
 
 	// NOTE(hampus): Position 0
 	glEnableVertexAttribArray(0);

@@ -1,4 +1,4 @@
-global UI_State ui_state;
+global UI_State *ui_state;
 
 // hampus: Color themes
 
@@ -23,9 +23,9 @@ UI_DefaultTheme()
 internal UI_Box *
 UI_TopParent()
 {
-	if(ui_state.parent_stack.first)
+	if(ui_state->parent_stack.first)
 	{
-		return(ui_state.parent_stack.first->box);
+		return(ui_state->parent_stack.first->box);
 	}
 	else
 	{
@@ -36,13 +36,13 @@ UI_TopParent()
 internal MemoryArena *
 UI_FrameArena()
 {
-	return(&ui_state.frame_arena);
+	return(&ui_state->frame_arena);
 }
 
 internal MemoryArena *
 UI_PermanentArena()
 {
-	return(&ui_state.permanent_arena);
+	return(&ui_state->permanent_arena);
 }
 
 // hampus: internals for managing the style, text and layout stacks
@@ -50,19 +50,19 @@ UI_PermanentArena()
 internal UI_LayoutStyle *
 UI_TopLayout()
 {
-	return(ui_state.layout_stack.first);
+	return(ui_state->layout_stack.first);
 }
 
 internal UI_RectStyle *
 UI_TopRectStyle()
 {
-	return(ui_state.rect_style_stack.first);
+	return(ui_state->rect_style_stack.first);
 }
 
 internal UI_TextStyle *
 UI_TopTextStyle()
 {
-	return(ui_state.text_style_stack.first);
+	return(ui_state->text_style_stack.first);
 }
 
 // hampus: Layout stack
@@ -72,7 +72,7 @@ UI_PushParent(UI_Box *box)
 {
 	UI_ParentStackNode *node = PushStruct(UI_FrameArena(), UI_ParentStackNode);
 	node->box = box;
-	StackPush(ui_state.parent_stack.first, node);
+	StackPush(ui_state->parent_stack.first, node);
 	if(box->flags & UI_BoxFlag_Clip)
 	{
 		R_PushClipRect(box->calc_rect);
@@ -82,23 +82,23 @@ UI_PushParent(UI_Box *box)
 internal void
 UI_PopParent()
 {
-	if(ui_state.parent_stack.first->box->flags & UI_BoxFlag_Clip)
+	if(ui_state->parent_stack.first->box->flags & UI_BoxFlag_Clip)
 	{
 		R_PopClipRect();
 	}
-	StackPop(ui_state.parent_stack.first);
+	StackPop(ui_state->parent_stack.first);
 }
 
 internal UI_LayoutStyle *
 UI_PushLayout()
 {
-	UI_LayoutStyle *layout = PushStruct(&ui_state.frame_arena, UI_LayoutStyle);
-	if(ui_state.layout_stack.first)
+	UI_LayoutStyle *layout = PushStruct(&ui_state->frame_arena, UI_LayoutStyle);
+	if(ui_state->layout_stack.first)
 	{
-		CopyStruct(layout, ui_state.layout_stack.first);
+		CopyStruct(layout, ui_state->layout_stack.first);
 	}
-	layout->stack_next = ui_state.layout_stack.first;
-	ui_state.layout_stack.first = layout;
+	layout->stack_next = ui_state->layout_stack.first;
+	ui_state->layout_stack.first = layout;
 
 	return(layout);
 }
@@ -106,17 +106,17 @@ UI_PushLayout()
 internal void
 UI_PopLayout()
 {
-	ui_state.layout_stack.first = ui_state.layout_stack.first->stack_next;
+	ui_state->layout_stack.first = ui_state->layout_stack.first->stack_next;
 }
 
 internal UI_LayoutStyle *
 UI_GetAutoPopLayout()
 {
 	UI_LayoutStyle *layout = UI_TopLayout();
-	if(!ui_state.layout_stack.auto_pop)
+	if(!ui_state->layout_stack.auto_pop)
 	{
 		layout = UI_PushLayout();
-		ui_state.layout_stack.auto_pop = true;
+		ui_state->layout_stack.auto_pop = true;
 	}
 	return(layout);
 }
@@ -126,30 +126,30 @@ UI_GetAutoPopLayout()
 internal UI_RectStyle *
 UI_PushRectStyle()
 {
-	UI_RectStyle *rect_style = PushStruct(&ui_state.frame_arena, UI_RectStyle);
+	UI_RectStyle *rect_style = PushStruct(&ui_state->frame_arena, UI_RectStyle);
 	UI_RectStyle *first = UI_TopRectStyle();
 	if(first)
 	{
 		CopyStruct(rect_style, first);
 	}
 	rect_style->stack_next = first;
-	ui_state.rect_style_stack.first = rect_style;
+	ui_state->rect_style_stack.first = rect_style;
 
 	return(rect_style);
 }
 
 internal void UI_PopRectStyle()
 {
-	ui_state.rect_style_stack.first = ui_state.rect_style_stack.first->stack_next;
+	ui_state->rect_style_stack.first = ui_state->rect_style_stack.first->stack_next;
 }
 
 internal UI_RectStyle *UI_GetAutoPopRectStyle()
 {
 	UI_RectStyle *rect_style = UI_TopRectStyle();
-	if(!ui_state.rect_style_stack.auto_pop)
+	if(!ui_state->rect_style_stack.auto_pop)
 	{
 		rect_style = UI_PushRectStyle();
-		ui_state.rect_style_stack.auto_pop = true;
+		ui_state->rect_style_stack.auto_pop = true;
 	}
 	return(rect_style);
 }
@@ -158,30 +158,30 @@ internal UI_RectStyle *UI_GetAutoPopRectStyle()
 
 internal UI_TextStyle *UI_PushTextStyle()
 {
-	UI_TextStyle *text_style = PushStruct(&ui_state.frame_arena, UI_TextStyle);
+	UI_TextStyle *text_style = PushStruct(&ui_state->frame_arena, UI_TextStyle);
 	UI_TextStyle *first = UI_TopTextStyle();
 	if(first)
 	{
 		CopyStruct(text_style, first);
 	}
 	text_style->stack_next = first;
-	ui_state.text_style_stack.first = text_style;
+	ui_state->text_style_stack.first = text_style;
 
 	return(text_style);
 }
 
 internal void UI_PopTextStyle()
 {
-	ui_state.text_style_stack.first = ui_state.text_style_stack.first->stack_next;
+	ui_state->text_style_stack.first = ui_state->text_style_stack.first->stack_next;
 }
 
 internal UI_TextStyle *UI_GetAutoPopTextStyle()
 {
 	UI_TextStyle *text_style = UI_TopTextStyle();
-	if(!ui_state.text_style_stack.auto_pop)
+	if(!ui_state->text_style_stack.auto_pop)
 	{
 		text_style = UI_PushTextStyle();
-		ui_state.text_style_stack.auto_pop = true;
+		ui_state->text_style_stack.auto_pop = true;
 	}
 	return(text_style);
 }
@@ -192,7 +192,7 @@ internal void UI_PushString(String8 string)
 {
 	String8StackNode *node = PushStruct(UI_FrameArena(), String8StackNode);
 	node->string = string;
-	StackPush(ui_state.string_stack.first, node);
+	StackPush(ui_state->string_stack.first, node);
 }
 
 internal void UI_PushStringF(String8 string)
@@ -214,7 +214,7 @@ internal void UI_PushStringF(String8 string)
 
 internal void UI_PopString()
 {
-	StackPop(ui_state.string_stack.first);
+	StackPop(ui_state->string_stack.first);
 }
 
 internal B32 UI_KeyMatch(UI_Key a, UI_Key b)
@@ -282,7 +282,7 @@ internal UI_Key UI_KeyFromString(String8 string)
 			UI_PushString(string);
 		}
 
-		result.key = UI_HashStringStack(ui_state.string_stack, 1);
+		result.key = UI_HashStringStack(ui_state->string_stack, 1);
 		UI_PopString();
 	}
 
@@ -312,7 +312,7 @@ internal UI_Size UI_Pixels(F32 value)
 
 internal UI_Size UI_Em(F32 value)
 {
-	return(UI_Pixels(value * ui_state.font->max_height));
+	return(UI_Pixels(value * ui_state->font->max_height));
 }
 
 internal UI_Size UI_TextContent()
@@ -363,7 +363,7 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 {
 	UI_Comm result = {0};
 
-	Vec2F32 mouse = ui_state.mouse_pos;
+	Vec2F32 mouse = ui_state->mouse_pos;
 
 	B32 inside_box = R_PointInsideRect(mouse, box->calc_rect);
 	B32 inside_parent_box = true;
@@ -375,12 +375,12 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 		}
 	}
 
-	OS_EventList *event_list = ui_state.os_event_list;
+	OS_EventList *event_list = ui_state->os_event_list;
 
 	B32 previous_still_active = false;
-	if(!UI_KeyIsNull(ui_state.active_key))
+	if(!UI_KeyIsNull(ui_state->active_key))
 	{
-		if(!UI_KeyMatch(ui_state.active_key, box->key))
+		if(!UI_KeyMatch(ui_state->active_key, box->key))
 		{
 			previous_still_active = true;
 		}
@@ -388,8 +388,8 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 
 	B32 capture_input = false;
 
-	if(!ui_state.inside_popup ||
-		 ui_state.building_popup)
+	if(!ui_state->inside_popup ||
+		 ui_state->building_popup)
 	{
 		if(!previous_still_active)
 		{
@@ -404,7 +404,7 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 	{
 		result.scroll = -OS_GetScroll();
 		result.hovering = true;
-		ui_state.hot_key = box->key;
+		ui_state->hot_key = box->key;
 		for(OS_EventNode *node = event_list->first;
 				node != 0;
 				node = node->next)
@@ -418,10 +418,10 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 					{
 						result.pressed = true;
 
-						ui_state.active_key = box->key;
-						ui_state.focus_key = box->key;
+						ui_state->active_key = box->key;
+						ui_state->focus_key = box->key;
 
-						OS_EatEvent(event_list, node);
+						DLL_Remove(event_list->first, event_list->last, node);
 					}
 				} break;
 
@@ -431,7 +431,7 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 					{
 						result.clicked = true;
 
-						OS_EatEvent(event_list, node);
+						DLL_Remove(event_list->first, event_list->last, node);
 					}
 				} break;
 			}
@@ -453,17 +453,17 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 						 event.key == OS_Key_Escape)
 					{
 						result.enter = true;
-						OS_EatEvent(event_list, node);
+						DLL_Remove(event_list->first, event_list->last, node);
 					}
 					else if(event.key == OS_Key_PageUp)
 					{
 						result.page_up = true;
-						OS_EatEvent(event_list, node);
+						DLL_Remove(event_list->first, event_list->last, node);
 					}
 					else if(event.key == OS_Key_PageDown)
 					{
 						result.page_down = true;
-						OS_EatEvent(event_list, node);
+						DLL_Remove(event_list->first, event_list->last, node);
 					}
 				} break;
 			}
@@ -473,12 +473,12 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 	if(UI_IsActive(box))
 	{
 		result.dragging = true;
-		ui_state.hot_key = box->key;
+		ui_state->hot_key = box->key;
 	}
 
 	result.mouse = mouse;
 
-	result.drag_delta = V2SubV2(mouse, ui_state.old_mouse_pos);
+	result.drag_delta = V2SubV2(mouse, ui_state->old_mouse_pos);
 
 	result.box = box;
 
@@ -506,11 +506,11 @@ internal void UI_EquipBoxWithDisplayString(UI_Box *box, String8 string)
 internal UI_Box *
 UI_BoxAlloc()
 {
-	UI_Box *result = (UI_Box *)ui_state.first_free_box;
+	UI_Box *result = (UI_Box *)ui_state->first_free_box;
 
-	ui_state.first_free_box = ui_state.first_free_box->next;
+	ui_state->first_free_box = ui_state->first_free_box->next;
 
-	ui_state.box_free_list_slots_used++;
+	ui_state->box_free_list_slots_used++;
 
 	ZeroArray(result, 1);
 
@@ -520,10 +520,10 @@ UI_BoxAlloc()
 internal void UI_BoxFree(UI_Box *box)
 {
 	UI_FreeBox *free_box = (UI_FreeBox *)box;
-	free_box->next = ui_state.first_free_box;
-	ui_state.first_free_box = free_box;
+	free_box->next = ui_state->first_free_box;
+	ui_state->first_free_box = free_box;
 
-	ui_state.box_free_list_slots_used--;
+	ui_state->box_free_list_slots_used--;
 }
 
 internal void UI_PushBoxInTree(UI_Box *box)
@@ -538,8 +538,8 @@ internal UI_Box *UI_BoxFromKey(UI_Key key)
 
 	if(!UI_KeyIsNull(key))
 	{
-		U64 slot_index = key.key % ui_state.box_hash_map_count;
-		for(result = ui_state.box_hash_map[slot_index];
+		U64 slot_index = key.key % ui_state->box_hash_map_count;
+		for(result = ui_state->box_hash_map[slot_index];
 				result != 0;
 				result = result->hash_next)
 		{
@@ -566,22 +566,22 @@ internal UI_Box *UI_BoxMake(UI_BoxFlag flags, String8 string)
 		result = UI_BoxAlloc();
 		result->key = key;
 
-		U32 slot = result->key.key % ui_state.box_hash_map_count;
+		U32 slot = result->key.key % ui_state->box_hash_map_count;
 
-		UI_Box *hash_box = ui_state.box_hash_map[slot];
+		UI_Box *hash_box = ui_state->box_hash_map[slot];
 		if(hash_box)
 		{
 			hash_box->hash_prev = result;
 			result->hash_next = hash_box;
 
-			ui_state.box_hash_map[slot] = result;
+			ui_state->box_hash_map[slot] = result;
 		}
 		else
 		{
-			ui_state.box_hash_map[slot] = result;
+			ui_state->box_hash_map[slot] = result;
 		}
 
-		result->frame_created_index = ui_state.frame;
+		result->frame_created_index = ui_state->frame;
 	}
 
 	UI_Box *parent = UI_TopParent();
@@ -597,7 +597,7 @@ internal UI_Box *UI_BoxMake(UI_BoxFlag flags, String8 string)
 	}
 	else
 	{
-		ui_state.root = parent;
+		ui_state->root = parent;
 	}
 
 	result->flags = flags;
@@ -632,26 +632,26 @@ internal UI_Box *UI_BoxMake(UI_BoxFlag flags, String8 string)
 		result->rect_style = *UI_TopRectStyle();
 		result->text_style = *UI_TopTextStyle();
 
-		result->clip_rect = r_state.clip_rect_stack.first->rect;
+		result->clip_rect = r_state->clip_rect_stack.first->rect;
 
-		if(ui_state.layout_stack.auto_pop)
+		if(ui_state->layout_stack.auto_pop)
 		{
 			UI_PopLayout();
-			ui_state.layout_stack.auto_pop = false;
+			ui_state->layout_stack.auto_pop = false;
 		}
-		if(ui_state.rect_style_stack.auto_pop)
+		if(ui_state->rect_style_stack.auto_pop)
 		{
 			UI_PopRectStyle();
-			ui_state.rect_style_stack.auto_pop = false;
+			ui_state->rect_style_stack.auto_pop = false;
 		}
-		if(ui_state.text_style_stack.auto_pop)
+		if(ui_state->text_style_stack.auto_pop)
 		{
 			UI_PopTextStyle();
-			ui_state.text_style_stack.auto_pop = false;
+			ui_state->text_style_stack.auto_pop = false;
 		}
 	}
 
-	result->last_frame_touched_index = ui_state.frame;
+	result->last_frame_touched_index = ui_state->frame;
 
 	return(result);
 }
@@ -662,15 +662,15 @@ internal B32 UI_BeginPopup(B32 *b)
 {
 	if(*b)
 	{
-		R_PushClipRect(ui_state.root->calc_rect);
+		R_PushClipRect(ui_state->root->calc_rect);
 
-		UI_PushParent(ui_state.popup_root);
+		UI_PushParent(ui_state->popup_root);
 		UI_Box *base = UI_BoxMake(0, Str8Lit("PopupBase"));
 		UI_PushParent(base);
 
 		base->popup_bool = b;
 
-		UI_Box *first = ui_state.popup_root->first;
+		UI_Box *first = ui_state->popup_root->first;
 		while(first)
 		{
 			if(first != base)
@@ -681,25 +681,25 @@ internal B32 UI_BeginPopup(B32 *b)
 		}
 
 		R_PushClipRect(base->calc_rect);
-		ui_state.building_popup = true;
+		ui_state->building_popup = true;
 	}
 	else
 	{
 
-		if(ui_state.layout_stack.auto_pop)
+		if(ui_state->layout_stack.auto_pop)
 		{
 			UI_PopLayout();
-			ui_state.layout_stack.auto_pop = false;
+			ui_state->layout_stack.auto_pop = false;
 		}
-		if(ui_state.rect_style_stack.auto_pop)
+		if(ui_state->rect_style_stack.auto_pop)
 		{
 			UI_PopRectStyle();
-			ui_state.rect_style_stack.auto_pop = false;
+			ui_state->rect_style_stack.auto_pop = false;
 		}
-		if(ui_state.text_style_stack.auto_pop)
+		if(ui_state->text_style_stack.auto_pop)
 		{
 			UI_PopTextStyle();
-			ui_state.text_style_stack.auto_pop = false;
+			ui_state->text_style_stack.auto_pop = false;
 		}
 	}
 
@@ -713,25 +713,25 @@ internal void UI_EndPopup()
 	UI_PopParent();
 	UI_PopParent();
 
-	ui_state.building_popup = false;
+	ui_state->building_popup = false;
 }
 
 internal void UI_CreateRootParent()
 {
-	UI_NextSize2(UI_Pixels((F32)r_state.render_dim.x), UI_Pixels((F32)r_state.render_dim.y));
+	UI_NextSize2(UI_Pixels((F32)r_state->render_dim.x), UI_Pixels((F32)r_state->render_dim.y));
 	UI_Box *root = UI_BoxMake(0, Str8Lit("Root"));
-	ui_state.root = root;
+	ui_state->root = root;
 }
 
 // hampus: Initialization and begin/end of ui frame
 
-internal void UI_Begin(UI_Theme theme, S32 font_size, OS_EventList *os_event_list, F64 dt)
+internal void UI_Begin(UI_Theme theme, OS_EventList *os_event_list, F64 dt)
 {
-	ui_state.dt = dt;
+	ui_state->dt = dt;
 
-	ui_state.os_event_list = os_event_list;
+	ui_state->os_event_list = os_event_list;
 
-	ui_state.mouse_pos = OS_GetMousePos(ui_state.window);
+	ui_state->mouse_pos = OS_GetMousePos(ui_state->window);
 
 	B32 left_mouse_pressed = false;
 	B32 left_mouse_released = false;
@@ -756,54 +756,54 @@ internal void UI_Begin(UI_Theme theme, S32 font_size, OS_EventList *os_event_lis
 		event_node = event_node->next;
 	}
 
-	ui_state.inside_popup = false;
+	ui_state->inside_popup = false;
 
-	if(ui_state.popup_root)
+	if(ui_state->popup_root)
 	{
-		UI_Box *first_popup_child = ui_state.popup_root->first;
+		UI_Box *first_popup_child = ui_state->popup_root->first;
 		while(first_popup_child)
 		{
-			if(R_PointInsideRect(ui_state.mouse_pos, first_popup_child->calc_rect))
+			if(R_PointInsideRect(ui_state->mouse_pos, first_popup_child->calc_rect))
 			{
-				ui_state.inside_popup = true;
+				ui_state->inside_popup = true;
 				break;
 			}
 			first_popup_child = first_popup_child->next;
 		}
 	}
 
-	for(U32 i = 0; i < ui_state.box_hash_map_count; ++i)
+	for(U32 i = 0; i < ui_state->box_hash_map_count; ++i)
 	{
-		UI_Box *box = ui_state.box_hash_map[i];
+		UI_Box *box = ui_state->box_hash_map[i];
 		while(box)
 		{
 			UI_Box *next = box->hash_next;
 			if(!UI_KeyIsNull(box->key))
 			{
-				if(UI_KeyMatch(ui_state.active_key, box->key))
+				if(UI_KeyMatch(ui_state->active_key, box->key))
 				{
 					if(left_mouse_released)
 					{
-						ui_state.active_key.key = 0;
+						ui_state->active_key.key = 0;
 					}
 				}
-				if(UI_KeyMatch(ui_state.focus_key, box->key))
+				if(UI_KeyMatch(ui_state->focus_key, box->key))
 				{
 					if(left_mouse_pressed)
 					{
-						ui_state.focus_key.key = 0;
+						ui_state->focus_key.key = 0;
 					}
 				}
 			}
 			if(!(box->flags & UI_BoxFlag_SaveState))
 			{
-				if(box->last_frame_touched_index < (ui_state.frame - 1) ||
+				if(box->last_frame_touched_index < (ui_state->frame - 1) ||
 					 UI_KeyIsNull(box->key))
 				{
 
-					if(box == ui_state.box_hash_map[i])
+					if(box == ui_state->box_hash_map[i])
 					{
-						ui_state.box_hash_map[i] = box->hash_next;
+						ui_state->box_hash_map[i] = box->hash_next;
 					}
 
 					if(box->hash_next)
@@ -826,9 +826,9 @@ internal void UI_Begin(UI_Theme theme, S32 font_size, OS_EventList *os_event_lis
 		}
 	}
 
-	if(!UI_KeyIsNull(ui_state.hot_key))
+	if(!UI_KeyIsNull(ui_state->hot_key))
 	{
-		UI_Box *hover_box = UI_BoxFromKey(ui_state.hot_key);
+		UI_Box *hover_box = UI_BoxFromKey(ui_state->hot_key);
 		OS_SetHoverCursor(hover_box->hover_cursor);
 	}
 	else
@@ -836,11 +836,11 @@ internal void UI_Begin(UI_Theme theme, S32 font_size, OS_EventList *os_event_lis
 		OS_SetHoverCursor(OS_Cursor_Arrow);
 	}
 
-	ui_state.hot_key.key = 0;
-	ui_state.parent_stack.first = 0;
-	ui_state.layout_stack.first = 0;
-	ui_state.rect_style_stack.first = 0;
-	ui_state.text_style_stack.first = 0;
+	ui_state->hot_key.key = 0;
+	ui_state->parent_stack.first = 0;
+	ui_state->layout_stack.first = 0;
+	ui_state->rect_style_stack.first = 0;
+	ui_state->text_style_stack.first = 0;
 
 	UI_LayoutStyle *layout = UI_PushLayout();
 
@@ -848,13 +848,13 @@ internal void UI_Begin(UI_Theme theme, S32 font_size, OS_EventList *os_event_lis
 
 	// hampus: Set up theme
 
-	ui_state.theme = theme;
+	ui_state->theme = theme;
 
 	UI_TextStyle *text_style = UI_PushTextStyle();
 
 	text_style->text_color = theme.text_color;
 
-	text_style->font_size = font_size;
+	text_style->font_size = ui_state->font->height;
 
 	UI_RectStyle *rect_style = UI_PushRectStyle();
 
@@ -864,7 +864,7 @@ internal void UI_Begin(UI_Theme theme, S32 font_size, OS_EventList *os_event_lis
 	rect_style->border_color = theme.border_color;
 	rect_style->border_thickness = 0.5f;
 
-	F32 corner_radius = font_size / 4.0f;
+	F32 corner_radius = text_style->font_size / 4.0f;
 
 	rect_style->border_thickness = 0.5f;
 	rect_style->corner_radius = V4(corner_radius,
@@ -875,14 +875,16 @@ internal void UI_Begin(UI_Theme theme, S32 font_size, OS_EventList *os_event_lis
 
 	UI_CreateRootParent();
 
-	UI_PushParent(ui_state.root);
+	UI_PushParent(ui_state->root);
 
 	UI_NextChildLayoutAxis(Axis2_Y);
 	UI_NextSize2(UI_Pct(1), UI_Pct(1));
-	UI_Box * root2 = UI_BoxMake(0, Str8Lit("Root2"));
+	UI_Box *root2 = UI_BoxMake(0, Str8Lit("Root2"));
 
-	UI_Box * popup_root = UI_BoxMake(UI_BoxFlag_FixedX | UI_BoxFlag_FixedY, Str8Lit("PopupRoot"));
-	ui_state.popup_root = popup_root;
+	UI_Box *popup_root = UI_BoxMake(UI_BoxFlag_FixedX |
+																	UI_BoxFlag_FixedY, Str8Lit("PopupRoot"));
+
+	ui_state->popup_root = popup_root;
 
 	UI_PushParent(root2);
 }
@@ -892,7 +894,7 @@ internal void UI_SolveIndependentSizes(UI_Box *root)
 	root->target_size[Axis2_X] = 0;
 	root->target_size[Axis2_Y] = 0;
 
-	Vec2F32 text_dim = R_GetTextDim(ui_state.font, root->display_string);
+	Vec2F32 text_dim = R_GetTextDim(ui_state->font, root->display_string);
 
 	// NOTE(hampus): Calculate its size
 	switch(root->semantic_size[Axis2_X].kind)
@@ -1191,7 +1193,7 @@ internal void UI_CalculateFinalRect(UI_Box *root)
 	root->target_size[Axis2_X] = root->target_size[Axis2_X] * root->target_scale;
 	root->target_size[Axis2_Y] = root->target_size[Axis2_Y] * root->target_scale;
 
-	F32 animation_delta = (F32)ui_state.dt * ui_state.animation_speed;
+	F32 animation_delta = (F32)ui_state->dt * ui_state->animation_speed;
 
 	if(!UI_BoxHasFlag(root, UI_BoxFlag_AnimateStart))
 	{
@@ -1304,7 +1306,7 @@ internal Vec2F32 UI_AlignDimInRect(Vec2F32 dim, RectF32 calc_rect, UI_TextAlign 
 
 internal void UI_Animate(UI_Box *root, F32 dt)
 {
-	if(UI_KeyMatch(ui_state.hot_key, root->key))
+	if(UI_KeyMatch(ui_state->hot_key, root->key))
 	{
 		root->hot_t += 0.1f;
 	}
@@ -1313,7 +1315,7 @@ internal void UI_Animate(UI_Box *root, F32 dt)
 		root->hot_t -= 0.1f;
 	}
 
-	if(UI_KeyMatch(ui_state.active_key, root->key))
+	if(UI_KeyMatch(ui_state->active_key, root->key))
 	{
 		root->active_t += 0.1f;
 	}
@@ -1341,7 +1343,7 @@ internal void UI_Draw(UI_Box *root)
 	UI_TextStyle *text_style = &root->text_style;
 
 	Vec4F32 corner_radius = rect_style->corner_radius;
-	corner_radius = V4MulF32(corner_radius, (F32)ui_state.font->height / 30.0f);
+	corner_radius = V4MulF32(corner_radius, (F32)ui_state->font->height / 30.0f);
 
 	if(root->flags & UI_BoxFlag_DrawDropShadow)
 	{
@@ -1377,9 +1379,10 @@ internal void UI_Draw(UI_Box *root)
 
 	if(root->flags & UI_BoxFlag_DrawBorder)
 	{
-		if(UI_IsFocused(root) && !UI_KeyIsNull(ui_state.focus_key) && UI_BoxHasFlag(root, UI_BoxFlag_FocusAnimation))
+		if(UI_IsFocused(root) && !UI_KeyIsNull(ui_state->focus_key) && UI_BoxHasFlag(root, UI_BoxFlag_FocusAnimation))
 		{
-			F32 t = (F32)sin(OS_SecondsSinceAppStart() * 5);
+			// TODO(hampus): Fix this. 
+			F32 t = 0;
 			R_PushRect(root->calc_rect.min, root->calc_rect.max,
 								 .corner_radius = corner_radius,
 								 .border_thickness = rect_style->border_thickness,
@@ -1400,8 +1403,8 @@ internal void UI_Draw(UI_Box *root)
 	{
 		if(text_style->icon)
 		{
-			R_Glyph *glyph = &ui_state.font->glyphs[text_style->icon];
-			Vec2F32 glyph_dim = V2((F32)glyph->advance, (F32)ui_state.font->max_height);
+			R_Glyph *glyph = &ui_state->font->glyphs[text_style->icon];
+			Vec2F32 glyph_dim = V2((F32)glyph->advance, (F32)ui_state->font->max_height);
 
 			F32 padding[Axis2_COUNT] =
 			{
@@ -1411,12 +1414,12 @@ internal void UI_Draw(UI_Box *root)
 
 #if 1
 			R_PushGlyphIndex(UI_AlignDimInRect(glyph_dim, root->calc_rect, text_style->text_align, padding),
-											 text_style->font_size, ui_state.font, text_style->icon, V4(1.0f, 1.0f, 1.0f, 1.0f));
+											 text_style->font_size, ui_state->font, text_style->icon, V4(1.0f, 1.0f, 1.0f, 1.0f));
 #endif
 		}
 		else
 		{
-			Vec2F32 text_dim = R_GetTextDim(ui_state.font, root->display_string);
+			Vec2F32 text_dim = R_GetTextDim(ui_state->font, root->display_string);
 
 			F32 padding[Axis2_COUNT] =
 			{
@@ -1426,13 +1429,13 @@ internal void UI_Draw(UI_Box *root)
 
 			R_PushText(UI_AlignDimInRect(text_dim, root->calc_rect, text_style->text_align, padding),
 								 text_style->font_size,
-								 ui_state.font,
+								 ui_state->font,
 								 root->display_string,
 								 text_style->text_color);
 		}
 	}
 
-	if(ui_state.show_debug_lines)
+	if(ui_state->show_debug_lines)
 	{
 		R_PushRect(root->calc_rect.min, root->calc_rect.max,
 							 .border_thickness = 1.0f,
@@ -1458,24 +1461,25 @@ internal void UI_Layout(UI_Box *root)
 	UI_CalculateFinalRect(root);
 }
 
-internal void UI_End()
+internal void
+UI_End()
 {
 	UI_PopParent();
 
 	UI_PopParent();
 
-	UI_Box *root = ui_state.root;
+	UI_Box *root = ui_state->root;
 
 	UI_Layout(root);
-	UI_Animate(root, (F32)ui_state.dt);
+	UI_Animate(root, (F32)ui_state->dt);
 	UI_Draw(root);
 
-	ui_state.old_mouse_pos = ui_state.mouse_pos;
+	ui_state->old_mouse_pos = ui_state->mouse_pos;
 
-	ui_state.prev_frame_arena_used = UI_FrameArena()->pos;
+	ui_state->prev_frame_arena_used = UI_FrameArena()->pos;
 	ArenaZero(UI_FrameArena());
 
-	ui_state.frame++;
+	ui_state->frame++;
 }
 
 internal void
@@ -1484,28 +1488,29 @@ UI_Init(R_Font *font, OS_Window *window)
 	size_t ui_permanent_storage_size = GIGABYTES(1);
 	size_t ui_frame_storage_size = MEGABYTES(8);
 	size_t ui_memory_size = ui_permanent_storage_size + ui_frame_storage_size;
-	void *ui_memory = OS_AllocMem(ui_memory_size);
+	// TODO(hampus): Remove calloc()
+	void *ui_memory = calloc(1, ui_memory_size);
 
-	ui_state.font = font;
-	ui_state.window = window;
+	ui_state->font = font;
+	ui_state->window = window;
 
 	ArenaInit(UI_PermanentArena(), ui_memory, ui_permanent_storage_size);
 	ArenaInit(UI_FrameArena(), ((U8 *)ui_memory) + ui_permanent_storage_size, ui_frame_storage_size);
 
-	ui_state.box_storage_count = 4096;
-	ui_state.box_storage = PushArrayNoZero(UI_PermanentArena(), ui_state.box_storage_count, UI_Box);
+	ui_state->box_storage_count = 4096;
+	ui_state->box_storage = PushArrayNoZero(UI_PermanentArena(), ui_state->box_storage_count, UI_Box);
 
-	for(U64 i = 0; i < ui_state.box_storage_count; ++i)
+	for(U64 i = 0; i < ui_state->box_storage_count; ++i)
 	{
-		UI_BoxFree(ui_state.box_storage + i);
+		UI_BoxFree(ui_state->box_storage + i);
 	}
 
-	ui_state.box_free_list_slots_used = 0;
-	ui_state.box_free_list_size = 4096;
-	ui_state.box_hash_map_count = 4096;
-	ui_state.box_hash_map = PushArrayNoZero(UI_PermanentArena(), ui_state.box_hash_map_count, UI_Box *);
+	ui_state->box_free_list_slots_used = 0;
+	ui_state->box_free_list_size = 4096;
+	ui_state->box_hash_map_count = 4096;
+	ui_state->box_hash_map = PushArrayNoZero(UI_PermanentArena(), ui_state->box_hash_map_count, UI_Box *);
 
-	ui_state.animation_speed = 20.0f;
+	ui_state->animation_speed = 20.0f;
 }
 
 internal UI_Box *ui_get_box(String8 string)
@@ -1515,4 +1520,10 @@ internal UI_Box *ui_get_box(String8 string)
 	UI_Box *result = UI_BoxFromKey(key);
 
 	return(result);
+}
+
+internal void
+UI_SelectState(UI_State *state)
+{
+	ui_state = state;
 }

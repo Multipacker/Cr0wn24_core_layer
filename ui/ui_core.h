@@ -395,13 +395,13 @@ typedef struct UI_State
 
 // hampus: Helper internals
 
-#define UI_IsHot(box)       (UI_KeyMatch(box->key, ui_state.hot_key))
-#define UI_IsActive(box)    (UI_KeyMatch(box->key, ui_state.active_key))
-#define UI_IsFocused(box)   (UI_KeyMatch(box->key, ui_state.focus_key))
+#define UI_IsHot(box)       (UI_KeyMatch(box->key, ui_state->hot_key))
+#define UI_IsActive(box)    (UI_KeyMatch(box->key, ui_state->active_key))
+#define UI_IsFocused(box)   (UI_KeyMatch(box->key, ui_state->focus_key))
 
-#define UI_WasHot(box)      (UI_KeyMatch(box->key, ui_state.prev_hot_key))
-#define UI_WasActive(box)   (UI_KeyMatch(box->key, ui_state.prev_active_key))
-#define UI_WasFocused(box)  (UI_KeyMatch(box->key, ui_state.prev_focus_key))
+#define UI_WasHot(box)      (UI_KeyMatch(box->key, ui_state->prev_hot_key))
+#define UI_WasActive(box)   (UI_KeyMatch(box->key, ui_state->prev_active_key))
+#define UI_WasFocused(box)  (UI_KeyMatch(box->key, ui_state->prev_focus_key))
 
 #define UI_DeferLoop(begin, end) for(int _i_ = ((begin), 0); !_i_; _i_ += 1, (end))
 

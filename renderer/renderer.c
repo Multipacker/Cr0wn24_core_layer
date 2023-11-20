@@ -12,17 +12,17 @@
 
 #define internal static
 
-global R_State r_state;
-
-internal R_Handle D3D11_LoadTexture(void *data, S32 width, S32 height);
+global R_State *r_state;
 
 internal void
 R_Init()
 {
+#if 0
 	U32 white = 0xffffffff;
-	r_state.white_texture.handle = D3D11_LoadTexture(&white, 1, 1);
-	r_state.white_texture.dim.height = 1;
-	r_state.white_texture.dim.width = 1;
+	r_state->white_texture.handle = D3D11_LoadTexture(&white, 1, 1);
+	r_state->white_texture.dim.height = 1;
+	r_state->white_texture.dim.width = 1;
+#endif
 }
 
 internal R_Texture
@@ -33,7 +33,7 @@ R_LoadTexture(String8 path)
 	S32 channels;
 	void *data = stbi_load((const char *)path.str, &result.dim.width, &result.dim.height, &channels, 0);
 
-	result.handle = D3D11_LoadTexture(data, result.dim.width, result.dim.height);
+	result.handle = r_state->GPULoadTexture(data, result.dim.width, result.dim.height);
 
 	stbi_image_free(data);
 
@@ -60,7 +60,7 @@ internal void
 R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params)
 #endif
 {
-	RenderData *render_data = &r_state.render_data;
+	RenderData *render_data = &r_state->render_data;
 	Batch2DNode *batch_node = render_data->batch_list->last;
 
 	R_Texture texture = params.texture;
@@ -68,12 +68,12 @@ R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params)
 	B32 rect_match = false;
 	if(batch_node)
 	{
-		rect_match = R_RectF32Match(batch_node->batch->clip_rect, r_state.clip_rect_stack.first->rect);
+		rect_match = R_RectF32Match(batch_node->batch->clip_rect, r_state->clip_rect_stack.first->rect);
 	}
 
 	if(!batch_node ||
 		 (!R_HandleMatch(texture.handle, batch_node->batch->tex.handle) &&
-			!R_HandleMatch(texture.handle, r_state.white_texture.handle)) ||
+			!R_HandleMatch(texture.handle, r_state->white_texture.handle)) ||
 		 !rect_match)
 	{
 		// NOTE(hampus): If the previus batch just contained a white texture,
@@ -81,7 +81,7 @@ R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params)
 		B32 previous_was_white_texture = false;
 		if(batch_node)
 		{
-			if(R_HandleMatch(batch_node->batch->tex.handle, r_state.white_texture.handle) && !rect_match)
+			if(R_HandleMatch(batch_node->batch->tex.handle, r_state->white_texture.handle) && !rect_match)
 			{
 				previous_was_white_texture = true;
 			}
@@ -89,10 +89,10 @@ R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params)
 
 		if(!previous_was_white_texture)
 		{
-			batch_node = PushStruct(r_state.arena, Batch2DNode);
-			batch_node->batch = PushStruct(r_state.arena, Batch2D);
+			batch_node = PushStruct(r_state->arena, Batch2DNode);
+			batch_node->batch = PushStruct(r_state->arena, Batch2D);
 			batch_node->batch->num_rects = 0;
-			batch_node->batch->clip_rect = r_state.clip_rect_stack.first->rect;
+			batch_node->batch->clip_rect = r_state->clip_rect_stack.first->rect;
 
 #if R_DEBUG
 			batch_node->batch->file = file;
@@ -115,7 +115,7 @@ R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params)
 	rect->min_uv = params.texture.src_p0;
 	rect->max_uv = params.texture.src_p1;
 	rect->corner_radius = params.corner_radius;
-	rect->omit_texture = R_HandleMatch(params.texture.handle, r_state.white_texture.handle) ? 1.0f : 0.0f;
+	rect->omit_texture = R_HandleMatch(params.texture.handle, r_state->white_texture.handle) ? 1.0f : 0.0f;
 	rect->is_text = (F32)!!params.text;
 	rect->edge_softness = params.edge_softness;
 	rect->border_thickness = params.border_thickness;
@@ -253,7 +253,7 @@ R_PackBitmapsIntoTextureAtlas(MemoryArena *arena, S32 atlas_width, S32 atlas_hei
 		current_x += entry->dim.width + padding;
 	}
 
-	result.texture.handle = D3D11_LoadTexture(data, result.dim.width, result.dim.height);
+	result.texture.handle = r_state->GPULoadTexture(data, result.dim.width, result.dim.height);
 	result.texture.dim = result.dim;
 	result.texture.src_p0 = V2(0, 0);
 	result.texture.src_p1 = V2(1, 1);
@@ -319,7 +319,7 @@ R_LoadFont(MemoryArena *arena, R_Font *font, String8 font_path, String8 icon_pat
 		glyph_bitmap->dim.width = width;
 		glyph_bitmap->dim.height = height;
 
-		U8 *new_teture_data = OS_AllocMem(glyph_bitmap->dim.width * glyph_bitmap->dim.height * 4);
+		U8 *new_teture_data = PushArray(arena, glyph_bitmap->dim.width * glyph_bitmap->dim.height * 4, U8);
 		U8 *src = glyph_bitmap->data;
 		U8 *dst = new_teture_data;
 
@@ -388,7 +388,7 @@ R_LoadFont(MemoryArena *arena, R_Font *font, String8 font_path, String8 icon_pat
 		glyph_bitmap->dim.width = width;
 		glyph_bitmap->dim.height = height;
 
-		U8 *new_teture_data = OS_AllocMem(glyph_bitmap->dim.width * glyph_bitmap->dim.height * 4);
+		U8 *new_teture_data = PushArray(arena, glyph_bitmap->dim.width * glyph_bitmap->dim.height * 4, U8);
 		U8 *src = glyph_bitmap->data;
 		U8 *dst = new_teture_data;
 
@@ -428,14 +428,11 @@ R_LoadFont(MemoryArena *arena, R_Font *font, String8 font_path, String8 icon_pat
 		}
 	}
 
-
 	font->atlas = R_PackBitmapsIntoTextureAtlas(arena, 1024, 1024, loaded_bitmap_glyphs, 256 + 128, 5);
-#if 1
 	for(U32 i = 0; i < 256 + 128; ++i)
 	{
 		font->glyphs[i].texture = font->atlas.textures[i];
 	}
-#endif
 }
 
 internal void
@@ -444,15 +441,15 @@ R_PushClipRect(RectF32 rect)
 	Assert(rect.x1 > rect.x0);
 	Assert(rect.y1 > rect.y0);
 
-	ClipRectNode *node = PushStruct(r_state.arena, ClipRectNode);
+	ClipRectNode *node = PushStruct(r_state->arena, ClipRectNode);
 	node->rect = rect;
-	StackPush(r_state.clip_rect_stack.first, node);
+	StackPush(r_state->clip_rect_stack.first, node);
 }
 
 internal void
 R_PopClipRect()
 {
-	StackPop(r_state.clip_rect_stack.first);
+	StackPop(r_state->clip_rect_stack.first);
 }
 
 internal RectF32
@@ -466,9 +463,9 @@ R_MakeRectF32(F32 x0, F32 y0, F32 x1, F32 y1)
 internal void
 R_Begin(MemoryArena *arena)
 {
-	r_state.arena = arena;
+	r_state->arena = arena;
 
-	r_state.render_data.batch_list = PushStruct(r_state.arena, Batch2DList);
+	r_state->render_data.batch_list = PushStruct(r_state->arena, Batch2DList);
 
 	R_PushClipRect(R_MakeRectF32(0, 0, 2560, 1440));
 }
@@ -477,8 +474,6 @@ internal void
 R_End()
 {
 	R_PopClipRect();
-
-	D3D11_End();
 }
 
 internal Vec2F32
@@ -525,4 +520,10 @@ R_IntersectRectF32(RectF32 dest, RectF32 src)
 	result.y1 = Clamp(dest.y0, src.y1, dest.y1);
 
 	return(result);
+}
+
+internal void
+R_SelectState(R_State *state)
+{
+	r_state = state;
 }

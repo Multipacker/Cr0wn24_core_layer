@@ -48,16 +48,6 @@ UI_Button(String8 string)
 {
 	UI_LayoutStyle *layout = UI_TopLayout();
 
-	if (!layout->pref_size[Axis2_X].kind)
-	{
-		UI_NextTextEdgePadding(Axis2_X, UI_Em(1.2f).value);
-	}
-
-	if (!layout->pref_size[Axis2_Y].kind)
-	{
-		UI_NextTextEdgePadding(Axis2_Y, UI_Em(0.5f).value);
-	}
-
 	UI_NextHoverCursor(OS_Cursor_Hand);
 	UI_Box *box = UI_BoxMake(UI_BoxFlag_DrawBackground |
 													 UI_BoxFlag_DrawText |
@@ -454,7 +444,7 @@ UI_Divider()
 {
 	UI_NextSize(UI_TopParent()->child_layout_axis, UI_Pixels(1));
 	UI_NextSize(Flip(UI_TopParent()->child_layout_axis), UI_Fill());
-	UI_NextBackgroundColor(ui_state.theme.text_color);
+	UI_NextBackgroundColor(ui_state->theme.text_color);
 	UI_BoxMake(UI_BoxFlag_DrawBackground, Str8Lit(""));
 }
 
@@ -498,7 +488,7 @@ UI_ColorPicker(Vec4F32 *color, String8 string)
 
 				UI_NextRelativePos2(color_rect->calc_pos[Axis2_X], color_rect->calc_pos[Axis2_Y] - 400);
 				UI_NextSize2(UI_Em(15), UI_Em(15));
-				UI_NextBackgroundColor(ui_state.theme.window_color);
+				UI_NextBackgroundColor(ui_state->theme.window_color);
 				UI_NextBoxFlags(UI_BoxFlag_DrawBorder | UI_BoxFlag_DrawDropShadow | UI_BoxFlag_Clip | UI_BoxFlag_DrawBackground | UI_BoxFlag_FixedX | UI_BoxFlag_FixedY | UI_BoxFlag_AnimateScale);
 				UI_Popup(&container->show_color_wheel)
 				{
@@ -559,7 +549,7 @@ UI_TextInput(char *buffer, size_t buffer_size, String8 string)
 
 		F32 overflow_x = 0;
 
-		B32 focused = UI_KeyMatch(input_box->key, ui_state.focus_key);
+		B32 focused = UI_KeyMatch(input_box->key, ui_state->focus_key);
 
 		if (focused)
 		{
@@ -579,7 +569,7 @@ UI_TextInput(char *buffer, size_t buffer_size, String8 string)
 
 		String8 text = Str8C(buffer);
 
-		Vec2F32 text_dim = R_GetTextDim(ui_state.font, text);
+		Vec2F32 text_dim = R_GetTextDim(ui_state->font, text);
 		overflow_x = (text_dim.x + UI_Em(0.5f).value) - input_box->calc_size[Axis2_X];
 		if (overflow_x < 0)
 		{
@@ -655,7 +645,7 @@ UI_Radio(UI_RadioData *data, U32 data_count, String8 string)
 				UI_Parent(box)
 				{
 					UI_NextRelativePos2(UI_Em(0.25f).value, UI_Em(0.25f).value);
-					UI_NextBackgroundColor(ui_state.theme.window_color);
+					UI_NextBackgroundColor(ui_state->theme.window_color);
 					UI_NextSize2(UI_Pct(0.5f), UI_Pct(0.5f));
 					UI_NextCornerRadius4(7.5f);
 
@@ -738,7 +728,7 @@ UI_PushScrollableContainer(String8 string)
 	{
 		UI_NextSize2(UI_Pixels(container_width - scrollbar_size), UI_Pixels(container_height - scrollbar_size));
 		UI_NextChildLayoutAxis(Axis2_Y);
-		UI_NextBackgroundColor(ui_state.theme.window_color);
+		UI_NextBackgroundColor(ui_state->theme.window_color);
 		UI_NextChildLayoutCorner(UI_Corner_BottomLeft);
 		view_box = UI_BoxMake(UI_BoxFlag_DrawBackground |
 													UI_BoxFlag_DrawBorder, Str8Lit("ContentBox"));

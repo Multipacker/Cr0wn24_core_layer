@@ -9,6 +9,10 @@ typedef enum R_IconIndex
 	R_IconIndex_Angle_Up = 216,
 	R_IconIndex_Angle_Right = 217,
 	R_IconIndex_Angle_Left = 218,
+	R_IconIndex_Pause = 225,
+	R_IconIndex_Play = 226,
+	R_IconIndex_SkipForward = 229,
+	R_IconIndex_SkipBackward = 230,
 } R_IconIndex;
 
 typedef union RectS32
@@ -132,6 +136,9 @@ typedef struct ClipRectList
 	ClipRectNode *last;
 } ClipRectList, ClipRectStack;
 
+#define GPU_LOAD_TEXTURE(name) R_Handle name(void *data, S32 width, S32 height);
+typedef GPU_LOAD_TEXTURE(GPULoadTextureProc);
+
 typedef struct R_State
 {
 	MemoryArena *arena;
@@ -141,8 +148,9 @@ typedef struct R_State
 
 	ClipRectStack clip_rect_stack;
 
-	Vec2S32 render_dim;
+	GPULoadTextureProc *GPULoadTexture;
 
+	Vec2S32 render_dim;
 } R_State;
 
 typedef struct R_Glyph
@@ -177,7 +185,7 @@ typedef struct R_Font
 	TextureAtlas atlas;
 } R_Font;
 
-#define R_PushRect(min, max, ...) R_PushRect_(min, max, (R_RectParams){.texture = r_state.white_texture, .color = V4(1.0f, 1.0f, 1.0f, 1.0f), __VA_ARGS__})
+#define R_PushRect(min, max, ...) R_PushRect_(min, max, (R_RectParams){.texture = r_state->white_texture, .color = V4(1.0f, 1.0f, 1.0f, 1.0f), __VA_ARGS__})
 
 #ifndef CORE_PATH
 #define CORE_PATH "../code/core_layer/"

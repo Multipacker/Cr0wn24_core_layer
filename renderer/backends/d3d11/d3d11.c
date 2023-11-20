@@ -185,12 +185,12 @@ D3D11_Init(OS_Window *window)
 }
 
 internal void
-D3D11_End()
+D3D11_End(Vec4F32 clear_color)
 {
 	HRESULT hr;
 
 	U32 width, height;
-	OS_QueryWindowSize(d3d11_state.window, &width, &height);
+	OS_QueryWindowSize(d3d11_state.window, (S32 *)&width, (S32 *)&height);
 
 	// NOTE(hampus): Resize swap chain if needed
 	if(d3d11_state.rtview == 0 || width != d3d11_state.current_width || height != d3d11_state.current_height)
@@ -237,21 +237,16 @@ D3D11_End()
 		}
 		d3d11_state.current_width = width;
 		d3d11_state.current_height = height;
-
-		r_state.render_dim.x = width;
-		r_state.render_dim.y = height;
 	}
 
 	// clear screen
-	// FLOAT color[] = {0.2f, 0.2f, 0.2f, 1.f};
-	FLOAT color[] = {45 / 255.0f, 48 / 255.0f, 50 / 255.0f, 1.f};
-	// FLOAT color[] = {0, 0, 0, 1.0f};
+	FLOAT color[] = {clear_color.r, clear_color.g, clear_color.b, clear_color.a};
 	ID3D11DeviceContext_ClearRenderTargetView(d3d11_state.context, d3d11_state.rtview, color);
 	ID3D11DeviceContext_ClearDepthStencilView(d3d11_state.context, d3d11_state.dsview, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
 	if(d3d11_state.rtview)
 	{
-		for(Batch2DNode *node = r_state.render_data.batch_list->first;
+		for(Batch2DNode *node = r_state->render_data.batch_list->first;
 				node != 0;
 				node = node->next)
 		{
@@ -348,7 +343,7 @@ D3D11_End()
 	}
 }
 
-internal R_Handle
+R_Handle
 D3D11_LoadTexture(void *data, S32 width, S32 height)
 {
 	Assert(data);

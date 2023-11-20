@@ -195,7 +195,8 @@ OS_ToggleFullscreen(OS_Window *window)
 	}
 }
 
-internal void OS_EatEvent(OS_EventList *event_list, OS_EventNode *node)
+internal void
+OS_EatEvent(OS_EventList *event_list, OS_EventNode *node)
 {
 	if(node == event_list->first)
 	{
@@ -372,7 +373,7 @@ OS_GatherEventsFromWindow(MemoryArena *arena)
 	return event_list;
 }
 
-internal void OS_QueryWindowSize(OS_Window *window, U32 *width, U32 *height)
+internal void OS_QueryWindowSize(OS_Window *window, S32 *width, S32 *height)
 {
 	RECT rect;
 	GetClientRect(window->handle, &rect);
@@ -461,7 +462,8 @@ internal void OS_FreeMemory(void *memory)
 	}
 }
 
-internal OS_Library OS_LoadLibrary(String8 library_name)
+internal OS_Library
+OS_LoadLibrary(String8 library_name)
 {
 	OS_Library result = {0};
 
@@ -476,10 +478,11 @@ internal void OS_FreeLibrary(OS_Library *library)
 	library->handle = 0;
 }
 
-internal void *OS_Loadinternal(OS_Library library, String8 internal_name)
+internal void *
+OS_LoadFunction(OS_Library library, String8 function_name)
 {
 	void *result = 0;
-	result = GetProcAddress((HMODULE)library.handle, (LPCSTR)internal_name.str);
+	result = GetProcAddress((HMODULE)library.handle, (LPCSTR)function_name.str);
 	return result;
 }
 
@@ -568,4 +571,41 @@ internal void
 OS_SetHoverCursor(OS_Cursor type)
 {
 	SetCursor(os_state.cursors[type]);
+}
+
+internal B32
+OS_TimeGreaterThanTime(Time *a, Time *b)
+{
+	B32 result = false;
+
+	if(a->year > b->year)
+	{
+		result = true;
+	}
+	else if(a->month > b->month)
+	{
+		result = true;
+	}
+	else if(a->day > b->day)
+	{
+		result = true;
+	}
+	else if(a->hour > b->hour)
+	{
+		result = true;
+	}
+	else if(a->minute > b->minute)
+	{
+		result = true;
+	}
+	else if(a->second > b->second)
+	{
+		result = true;
+	}
+	else if(a->millisecond > b->millisecond)
+	{
+		result = true;
+	}
+
+	return(result);
 }
