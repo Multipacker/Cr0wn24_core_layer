@@ -72,9 +72,9 @@ R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params)
 	}
 
 	if(!batch_node ||
-	   (!R_HandleMatch(texture.handle, batch_node->batch->tex.handle) &&
-		!R_HandleMatch(texture.handle, r_state.white_texture.handle)) ||
-	   !rect_match)
+		 (!R_HandleMatch(texture.handle, batch_node->batch->tex.handle) &&
+			!R_HandleMatch(texture.handle, r_state.white_texture.handle)) ||
+		 !rect_match)
 	{
 		// NOTE(hampus): If the previus batch just contained a white texture,
 		// we'll just replace it with our texture instead
@@ -135,12 +135,12 @@ R_PushGlyph(Vec2F32 pos, S32 glyph_height, R_Font *font, R_Glyph *glyph, Vec4F32
 	F32 height = glyph->size.y * scale;
 
 	R_PushRect(V2(xpos,
-				  ypos),
-			   V2(xpos + width,
-				  ypos + height),
-			   .texture = glyph->texture,
-			   .color = color,
-			   .text = true);
+								ypos),
+						 V2(xpos + width,
+								ypos + height),
+						 .texture = glyph->texture,
+						 .color = color,
+						 .text = true);
 
 }
 
@@ -166,7 +166,7 @@ R_PushText(Vec2F32 pos, S32 height, R_Font *font, String8 text, Vec4F32 color)
 
 internal TextureAtlas
 R_PackBitmapsIntoTextureAtlas(MemoryArena *arena, S32 atlas_width, S32 atlas_height,
-							  R_LoadedBitmap *bitmaps, S32 bitmap_count, S32 padding)
+															R_LoadedBitmap *bitmaps, S32 bitmap_count, S32 padding)
 {
 	// TODO(hampus): Really naive algoritm. Rewrite
 
@@ -299,8 +299,8 @@ R_LoadFont(MemoryArena *arena, R_Font *font, String8 font_path, String8 icon_pat
 	font->max_descent = ((S32)Abs((F32)face->descender * ((F32)face->size->metrics.y_scale / 65536.0f))) >> 6;
 
 	for(U32 glyph_index = 0;
-		glyph_index < 128;
-		++glyph_index)
+			glyph_index < 128;
+			++glyph_index)
 	{
 		FT_Load_Char(face, glyph_index, FT_LOAD_RENDER | FT_LOAD_TARGET_LCD);
 		// FT_Load_Glyph(face, (FT_UInt)(glyph_index), FT_LOAD_RENDER | FT_LOAD_TARGET_LCD);
@@ -369,8 +369,8 @@ R_LoadFont(MemoryArena *arena, R_Font *font, String8 font_path, String8 icon_pat
 	FT_Set_Pixel_Sizes(icon_face, 0, size - 5);
 
 	for(U32 glyph_index = 0;
-		glyph_index < 256;
-		++glyph_index)
+			glyph_index < 256;
+			++glyph_index)
 	{
 		FT_Load_Glyph(icon_face, (FT_UInt)(glyph_index), FT_LOAD_RENDER | FT_LOAD_TARGET_LCD);
 

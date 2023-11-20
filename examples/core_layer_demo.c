@@ -1,14 +1,16 @@
-#include "../base/base_inc.h"
-#include "../os/os_win32_inc.h"
-#include "../renderer/renderer.h"
-#include "../renderer/backends/d3d11/d3d11.h"
-#include "../ui/ui_inc.h"
+#define CORE_PATH "../"
 
-#include "../base/base_inc.c"
-#include "../os/os_win32_inc.c"
-#include "../renderer/renderer.c"
-#include "../renderer/backends/d3d11/d3d11.c"
-#include "../ui/ui_inc.c"
+#include "core_layer/base/base_inc.h"
+#include "core_layer/os/os_win32_inc.h"
+#include "core_layer/renderer/renderer.h"
+#include "core_layer/renderer/backends/d3d11/d3d11.h"
+#include "core_layer/ui/ui_inc.h"
+
+#include "core_layer/base/base_inc.c"
+#include "core_layer/os/os_win32_inc.c"
+#include "core_layer/renderer/renderer.c"
+#include "core_layer/renderer/backends/d3d11/d3d11.c"
+#include "core_layer/ui/ui_inc.c"
 
 internal void
 UITest()
