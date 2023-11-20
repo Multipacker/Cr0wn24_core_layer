@@ -10,7 +10,7 @@ pushd ..\build
 
 if not exist freetype.lib (
 	echo -- freetype.lib was not found. Building freetype --
-	call ..\misc\build_freetype.bat
+	call ..\misc\build_freetype.bat ..\
 )
 
 set shader_path=..\res\shaders
