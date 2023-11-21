@@ -445,7 +445,8 @@ internal F64 OS_SecondsSinceAppStart()
 	return((F64)counter.QuadPart - (F64)os_state.start_counter.QuadPart) / os_state.freq;
 }
 
-internal void *OS_AllocMem(size_t size)
+internal void *
+OS_AllocMem(size_t size)
 {
 	void *result = 0;
 

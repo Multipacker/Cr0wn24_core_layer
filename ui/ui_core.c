@@ -1481,35 +1481,41 @@ UI_End()
 	ui_state->frame++;
 }
 
-internal void
+internal UI_State *
 UI_Init(R_Font *font, OS_Window *window)
 {
+	UI_State *result = OS_AllocMem(sizeof(UI_State));
+
 	size_t ui_permanent_storage_size = GIGABYTES(1);
 	size_t ui_frame_storage_size = MEGABYTES(8);
 	size_t ui_memory_size = ui_permanent_storage_size + ui_frame_storage_size;
 	// TODO(hampus): Remove calloc()
-	void *ui_memory = calloc(1, ui_memory_size);
+	void *ui_memory = OS_AllocMem(ui_memory_size);
 
-	ui_state->font = font;
-	ui_state->window = window;
+	result->font = font;
+	result->window = window;
 
-	ArenaInit(UI_PermanentArena(), ui_memory, ui_permanent_storage_size);
-	ArenaInit(UI_FrameArena(), ((U8 *)ui_memory) + ui_permanent_storage_size, ui_frame_storage_size);
+	ArenaInit(&result->permanent_arena, ui_memory, ui_permanent_storage_size);
+	ArenaInit(&result->frame_arena, ((U8 *)ui_memory) + ui_permanent_storage_size, ui_frame_storage_size);
 
-	ui_state->box_storage_count = 4096;
-	ui_state->box_storage = PushArrayNoZero(UI_PermanentArena(), ui_state->box_storage_count, UI_Box);
+	result->box_storage_count = 4096;
+	result->box_storage = PushArrayNoZero(&result->permanent_arena, result->box_storage_count, UI_Box);
 
-	for(U64 i = 0; i < ui_state->box_storage_count; ++i)
+	for(U64 i = 0; i < result->box_storage_count; ++i)
 	{
-		UI_BoxFree(ui_state->box_storage + i);
+		UI_FreeBox *free_box = (UI_FreeBox *)(result->box_storage + i);
+		free_box->next = result->first_free_box;
+		result->first_free_box = free_box;
 	}
 
-	ui_state->box_free_list_slots_used = 0;
-	ui_state->box_free_list_size = 4096;
-	ui_state->box_hash_map_count = 4096;
-	ui_state->box_hash_map = PushArrayNoZero(UI_PermanentArena(), ui_state->box_hash_map_count, UI_Box *);
+	result->box_free_list_slots_used = 0;
+	result->box_free_list_size = 4096;
+	result->box_hash_map_count = 4096;
+	result->box_hash_map = PushArrayNoZero(&result->permanent_arena, result->box_hash_map_count, UI_Box *);
 
-	ui_state->animation_speed = 20.0f;
+	result->animation_speed = 20.0f;
+
+	return(result);
 }
 
 internal UI_Box *ui_get_box(String8 string)

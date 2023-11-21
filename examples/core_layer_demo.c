@@ -212,13 +212,7 @@ EntryPoint(String8List args)
 
 	OS_Window *window = OS_CreateWindow(Str8Lit("Test"), 0, 0, 800, 800, true);
 
-	r_state = OS_AllocMem(sizeof(R_State));
-	r_state->GPULoadTexture = D3D11_LoadTexture;
-
 	D3D11_Init(window);
-
-	ui_state = OS_AllocMem(sizeof(UI_State));
-	UI_SelectState(ui_state);
 
 	R_Texture tile_atlas = R_LoadTexture(Str8Lit("../res/test/Tilemap/tilemap_packed.png"));
 
@@ -256,7 +250,8 @@ EntryPoint(String8List args)
 	R_Font font = {0};
 	R_LoadFont(&permanent_arena, &font, CORE_RESOURCE("font/liberation-mono.ttf"), CORE_RESOURCE("font/icon/mfglabsiconset-webfont.ttf"), 20);
 
-	UI_Init(&font, window);
+	UI_State *state = UI_Init(&font, window);
+	UI_SelectState(state);
 
 	F64 dt = 0;
 	F64 start_counter = OS_SecondsSinceAppStart();

@@ -1,8 +1,13 @@
 global D3D11State d3d11_state;
 
+R_Handle D3D11_LoadTexture(void *data, S32 width, S32 height);
+
 internal void
 D3D11_Init(OS_Window *window)
 {
+	r_state = OS_AllocMem(sizeof(R_State));
+	r_state->GPULoadTexture = D3D11_LoadTexture;
+
 	Assert(window);
 
 	d3d11_state.window = window;
