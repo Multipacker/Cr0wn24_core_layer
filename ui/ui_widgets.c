@@ -3,12 +3,12 @@ UI_DefaultSize(UI_Size x, UI_Size y)
 {
 	UI_LayoutStyle *layout = UI_TopLayout();
 
-	if(!layout->pref_size[Axis2_X].kind)
+	if (!layout->pref_size[Axis2_X].kind)
 	{
 		UI_NextSize(Axis2_X, x);
 	}
 
-	if(!layout->pref_size[Axis2_Y].kind)
+	if (!layout->pref_size[Axis2_Y].kind)
 	{
 		UI_NextSize(Axis2_Y, y);
 	}
@@ -21,14 +21,14 @@ UI_Spacer(UI_Size size)
 	UI_NextSize(axis, size);
 	UI_NextSize(Flip(axis), UI_Pixels(0));
 	UI_BoxMake(0,
-						 Str8Lit(""));
+			   Str8Lit(""));
 }
 
 internal UI_Box *
 UI_Text(String8 string)
 {
 	UI_Box *box = UI_BoxMake(UI_BoxFlag_DrawText,
-													 Str8Lit(""));
+							 Str8Lit(""));
 	UI_EquipBoxWithDisplayString(box, string);
 	return(box);
 }
@@ -50,12 +50,12 @@ UI_Button(String8 string)
 
 	UI_NextHoverCursor(OS_Cursor_Hand);
 	UI_Box *box = UI_BoxMake(UI_BoxFlag_DrawBackground |
-													 UI_BoxFlag_DrawText |
-													 UI_BoxFlag_DrawBorder |
-													 UI_BoxFlag_HotAnimation |
-													 UI_BoxFlag_ActiveAnimation |
-													 UI_BoxFlag_Clickable,
-													 string);
+							 UI_BoxFlag_DrawText |
+							 UI_BoxFlag_DrawBorder |
+							 UI_BoxFlag_HotAnimation |
+							 UI_BoxFlag_ActiveAnimation |
+							 UI_BoxFlag_Clickable,
+							 string);
 	UI_EquipBoxWithDisplayString(box, string);
 
 	UI_Comm comm = UI_CommFromBox(box);
@@ -94,29 +94,29 @@ UI_Check(String8 string, B32 *val)
 		UI_NextSize2(UI_Em(1.0f), UI_Em(1.0f));
 		UI_NextHoverCursor(OS_Cursor_Hand);
 		UI_Box *check_box = UI_BoxMake(UI_BoxFlag_DrawBackground |
-																	 UI_BoxFlag_Clickable |
-																	 UI_BoxFlag_DrawBorder |
-																	 UI_BoxFlag_HotAnimation |
-																	 UI_BoxFlag_ActiveAnimation,
-																	 Str8Lit("Check"));
+									   UI_BoxFlag_Clickable |
+									   UI_BoxFlag_DrawBorder |
+									   UI_BoxFlag_HotAnimation |
+									   UI_BoxFlag_ActiveAnimation,
+									   Str8Lit("Check"));
 
 		comm = UI_CommFromBox(check_box);
 
-		if(comm.pressed)
+		if (comm.pressed)
 		{
 			*val = !(*val);
 		}
 
-		if(*val)
+		if (*val)
 		{
 			UI_Parent(check_box)
 			{
 				UI_NextIcon(R_IconIndex_Check);
 				UI_NextSize2(UI_Pct(1), UI_Pct(1));
 				UI_Box *check_mark = UI_BoxMake(UI_BoxFlag_AnimateSize |
-																				UI_BoxFlag_DrawText |
-																				UI_BoxFlag_AnimateStart,
-																				Str8Lit("CheckMark"));
+												UI_BoxFlag_DrawText |
+												UI_BoxFlag_AnimateStart,
+												Str8Lit("CheckMark"));
 			}
 
 		}
@@ -211,8 +211,8 @@ UI_BeginTree(String8 string)
 	UI_NextSize2(UI_SumOfChildren(), UI_SumOfChildren());
 	UI_NextBoxFlags(UI_BoxFlag_SaveState);
 	UI_Box *container = UI_BoxMake(UI_BoxFlag_AnimateWidth |
-																 UI_BoxFlag_AnimateHeight,
-																 Str8Lit("TreeContainer"));
+								   UI_BoxFlag_AnimateHeight,
+								   Str8Lit("TreeContainer"));
 
 	UI_PushParent(container);
 
@@ -220,9 +220,9 @@ UI_BeginTree(String8 string)
 	UI_NextBackgroundColor(V4(0, 0, 0, 0));
 	UI_NextHoverCursor(OS_Cursor_Hand);
 	UI_NextBoxFlags(UI_BoxFlag_HotAnimation |
-									UI_BoxFlag_Clickable |
-									UI_BoxFlag_DrawBackground |
-									UI_BoxFlag_ActiveAnimation);
+					UI_BoxFlag_Clickable |
+					UI_BoxFlag_DrawBackground |
+					UI_BoxFlag_ActiveAnimation);
 	UI_Box *label = UI_BeginNamedRow(Str8Lit("Label"));
 	UI_Comm comm = UI_CommFromBox(label);
 
@@ -230,10 +230,10 @@ UI_BeginTree(String8 string)
 	B32 clicked_off = false;
 	B32 was_on = container->show_expanded_tree;
 
-	if(comm.pressed)
+	if (comm.pressed)
 	{
 		container->show_expanded_tree = !(container->show_expanded_tree);
-		if(container->show_expanded_tree)
+		if (container->show_expanded_tree)
 		{
 			clicked_on = true;
 		}
@@ -243,7 +243,7 @@ UI_BeginTree(String8 string)
 		}
 	}
 
-	if(container->show_expanded_tree)
+	if (container->show_expanded_tree)
 	{
 		UI_NextIcon(R_IconIndex_Angle_Down);
 	}
@@ -254,7 +254,7 @@ UI_BeginTree(String8 string)
 
 	UI_NextSize2(UI_Em(1.0f), UI_Em(1.0f));
 	UI_Box *collapser = UI_BoxMake(UI_BoxFlag_DrawText,
-																 Str8Lit("TreeCollapser"));
+								   Str8Lit("TreeCollapser"));
 
 	UI_Spacer(UI_Em(0.5f));
 
@@ -268,7 +268,7 @@ UI_BeginTree(String8 string)
 
 	UI_Spacer(UI_Em(0.5f));
 
-	if(should_show)
+	if (should_show)
 	{
 		UI_NextSize(Axis2_Y, UI_Fill());
 		UI_NamedColumn(Str8Lit("Indent guide column"))
@@ -276,10 +276,10 @@ UI_BeginTree(String8 string)
 			UI_NextSize2(UI_Pixels(1), UI_Fill());
 			UI_NextBackgroundColor(V4(0.9f, 0.9f, 0.9f, 1.0f));
 			UI_BoxMake(UI_BoxFlag_DrawBackground |
-								 UI_BoxFlag_AnimateHeight |
-								 UI_BoxFlag_AnimateStart |
-								 UI_BoxFlag_SaveState,
-								 Str8Lit("Indent guide"));
+					   UI_BoxFlag_AnimateHeight |
+					   UI_BoxFlag_AnimateStart |
+					   UI_BoxFlag_SaveState,
+					   Str8Lit("Indent guide"));
 		}
 	}
 
@@ -290,7 +290,7 @@ UI_BeginTree(String8 string)
 	UI_NextBoxFlags(UI_BoxFlag_AnimateHeight | UI_BoxFlag_AnimateWidth);
 	UI_BeginNamedColumn(Str8Lit("TreeColumn"));
 
-	if(!(should_show))
+	if (!(should_show))
 	{
 		UI_EndTree();
 	}
@@ -324,17 +324,17 @@ UI_SliderF32(F32 *val, F32 min, F32 max, String8 string)
 		UI_NextHoverCursor(OS_Cursor_ResizeX);
 		UI_NextSize2(UI_Em(6), UI_Em(1.2f));
 		UI_Box *slider_back = UI_BoxMake(UI_BoxFlag_DrawBackground |
-																		 UI_BoxFlag_DrawBorder |
-																		 UI_BoxFlag_HotAnimation |
-																		 UI_BoxFlag_ActiveAnimation,
-																		 Str8Lit("SliderBack"));
+										 UI_BoxFlag_DrawBorder |
+										 UI_BoxFlag_HotAnimation |
+										 UI_BoxFlag_ActiveAnimation,
+										 Str8Lit("SliderBack"));
 		slider_back->display_string = Str8Lit("SliderBack");
 
 		comm = UI_CommFromBox(slider_back);
 
-		if(comm.box)
+		if (comm.box)
 		{
-			if(comm.dragging)
+			if (comm.dragging)
 			{
 				F32 val_pct = (comm.drag_delta.x) / slider_back->calc_size[Axis2_X];
 
@@ -349,17 +349,17 @@ UI_SliderF32(F32 *val, F32 min, F32 max, String8 string)
 			UI_NextSize2(UI_Pct((F32)(*val - min) / (F32)(max - min)), UI_Em(1.2f));
 			UI_NextBackgroundColor(V4(0.0f, 0.3f, 0.4f, 1.0f));
 			UI_Box *dragger = UI_BoxMake(UI_BoxFlag_DrawBackground |
-																	 UI_BoxFlag_DrawBorder,
-																	 Str8Lit("SliderDragger"));
+										 UI_BoxFlag_DrawBorder,
+										 Str8Lit("SliderDragger"));
 
 			dragger->display_string = Str8Lit("SliderDragger");
 
 			UI_NextRelativePos2(0, 0);
 			UI_NextSize2(UI_Pct(1), UI_Em(1.2f));
 			UI_Box *value_display = UI_BoxMake(UI_BoxFlag_DrawText |
-																				 UI_BoxFlag_FixedX |
-																				 UI_BoxFlag_FixedY,
-																				 Str8Lit(""));
+											   UI_BoxFlag_FixedX |
+											   UI_BoxFlag_FixedY,
+											   Str8Lit(""));
 
 			UI_EquipBoxWithDisplayString(value_display, PushStr8F(UI_FrameArena(), "%.02f", *val));
 
@@ -391,15 +391,15 @@ UI_SliderS32(S32 *val, S32 min, S32 max, String8 string)
 		UI_NextHoverCursor(OS_Cursor_ResizeX);
 		UI_NextSize2(UI_Em(6), UI_Em(1.2f));
 		UI_Box *slider_back = UI_BoxMake(UI_BoxFlag_DrawBackground |
-																		 UI_BoxFlag_DrawBorder |
-																		 UI_BoxFlag_HotAnimation |
-																		 UI_BoxFlag_ActiveAnimation,
-																		 Str8Lit("SliderBack"));
+										 UI_BoxFlag_DrawBorder |
+										 UI_BoxFlag_HotAnimation |
+										 UI_BoxFlag_ActiveAnimation,
+										 Str8Lit("SliderBack"));
 		slider_back->display_string = Str8Lit("SliderBack");
 
 		comm = UI_CommFromBox(slider_back);
 
-		if(comm.dragging)
+		if (comm.dragging)
 		{
 			F32 val_pct = (comm.mouse.x - slider_back->calc_rect.x0) / slider_back->calc_size[Axis2_X];
 
@@ -413,17 +413,17 @@ UI_SliderS32(S32 *val, S32 min, S32 max, String8 string)
 			UI_NextSize2(UI_Pct((F32)(*val - min) / (F32)(max - min)), UI_Em(1.2f));
 			UI_NextBackgroundColor(V4(0.0f, 0.3f, 0.4f, 1.0f));
 			UI_Box *dragger = UI_BoxMake(UI_BoxFlag_DrawBackground |
-																	 UI_BoxFlag_DrawBorder,
-																	 Str8Lit("SliderDragger"));
+										 UI_BoxFlag_DrawBorder,
+										 Str8Lit("SliderDragger"));
 
 			dragger->display_string = Str8Lit("SliderDragger");
 
 			UI_NextRelativePos2(0, 0);
 			UI_NextSize2(UI_Pct(1), UI_Em(1.2f));
 			UI_Box *value_display = UI_BoxMake(UI_BoxFlag_DrawText |
-																				 UI_BoxFlag_FixedX |
-																				 UI_BoxFlag_FixedY,
-																				 Str8Lit(""));
+											   UI_BoxFlag_FixedX |
+											   UI_BoxFlag_FixedY,
+											   Str8Lit(""));
 
 			UI_EquipBoxWithDisplayString(value_display, PushStr8F(UI_FrameArena(), "%d", *val));
 		}
@@ -475,13 +475,13 @@ UI_ColorPicker(Vec4F32 *color, String8 string)
 				UI_NextSize2(UI_Em(1.0f), UI_Em(1.0f));
 				UI_NextHoverCursor(OS_Cursor_Hand);
 				UI_Box *color_rect = UI_BoxMake(UI_BoxFlag_DrawBackground |
-																				UI_BoxFlag_DrawBorder |
-																				UI_BoxFlag_HotAnimation |
-																				UI_BoxFlag_ActiveAnimation |
-																				UI_BoxFlag_Clickable,
-																				Str8Lit("ColorRect"));
+												UI_BoxFlag_DrawBorder |
+												UI_BoxFlag_HotAnimation |
+												UI_BoxFlag_ActiveAnimation |
+												UI_BoxFlag_Clickable,
+												Str8Lit("ColorRect"));
 				UI_Comm comm = UI_CommFromBox(color_rect);
-				if(comm.pressed)
+				if (comm.pressed)
 				{
 					container->show_color_wheel = !container->show_color_wheel;
 				}
@@ -535,12 +535,12 @@ UI_TextInput(char *buffer, size_t buffer_size, String8 string)
 	{
 		UI_NextSize2(UI_Fill(), UI_Pct(1));
 		UI_Box *input_box = UI_BoxMake(UI_BoxFlag_DrawBackground |
-																	 UI_BoxFlag_DrawText |
-																	 UI_BoxFlag_DrawBorder |
-																	 UI_BoxFlag_HotAnimation |
-																	 UI_BoxFlag_ActiveAnimation |
-																	 UI_BoxFlag_FocusAnimation |
-																	 UI_BoxFlag_Clickable, Str8Lit("InputBox"));
+									   UI_BoxFlag_DrawText |
+									   UI_BoxFlag_DrawBorder |
+									   UI_BoxFlag_HotAnimation |
+									   UI_BoxFlag_ActiveAnimation |
+									   UI_BoxFlag_FocusAnimation |
+									   UI_BoxFlag_Clickable, Str8Lit("InputBox"));
 		input_box_comm = UI_CommFromBox(input_box);
 
 		R_PushClipRect(input_box->calc_rect);
@@ -551,18 +551,18 @@ UI_TextInput(char *buffer, size_t buffer_size, String8 string)
 
 		B32 focused = UI_KeyMatch(input_box->key, ui_state->focus_key);
 
-		if(focused)
+		if (focused)
 		{
 			char ch = OS_GetLastChar();
 
-			if(ch == 8)
+			if (ch == 8)
 			{
-				if(string_length)
+				if (string_length)
 					buffer[string_length - 1] = 0;
 			}
-			else if(ch >= 3 && ch <= 125)
+			else if (ch >= 3 && ch <= 125)
 			{
-				if(string_length + 1 < buffer_size)
+				if (string_length + 1 < buffer_size)
 					buffer[string_length] = ch;
 			}
 		}
@@ -571,7 +571,7 @@ UI_TextInput(char *buffer, size_t buffer_size, String8 string)
 
 		Vec2F32 text_dim = R_GetTextDim(ui_state->font, text);
 		overflow_x = (text_dim.x + UI_Em(0.5f).value) - input_box->calc_size[Axis2_X];
-		if(overflow_x < 0)
+		if (overflow_x < 0)
 		{
 			overflow_x = 0;
 		}
@@ -582,15 +582,15 @@ UI_TextInput(char *buffer, size_t buffer_size, String8 string)
 			UI_Spacer(UI_Pixels(5));
 			UI_NextSize(Axis2_Y, UI_Pixels(input_box->calc_size[Axis2_Y]));
 			UI_Text(text);
-			if(focused)
+			if (focused)
 			{
 				UI_Spacer(UI_Pixels(2));
 				UI_NextSize2(UI_Pixels(2), UI_Fill());
 				UI_NextBackgroundColor(V4(1.0f, 1.0f, 1.0f, 1.0f));
 				UI_BoxMake(UI_BoxFlag_DrawBackground |
-									 UI_BoxFlag_AnimateX |
-									 UI_BoxFlag_AnimateY |
-									 UI_BoxFlag_AnimateWidth, Str8Lit("Cursor"));
+						   UI_BoxFlag_AnimateX |
+						   UI_BoxFlag_AnimateY |
+						   UI_BoxFlag_AnimateWidth, Str8Lit("Cursor"));
 			}
 		}
 
@@ -617,30 +617,30 @@ UI_Radio(UI_RadioData *data, U32 data_count, String8 string)
 	UI_Spacer(UI_Em(0.5f));
 
 	UI_PushCornerRadius4(15);
-	for(U32 i = 0; i < data_count; ++i)
+	for (U32 i = 0; i < data_count; ++i)
 	{
 		UI_Row()
 		{
 			UI_NextSize2(UI_Em(1), UI_Em(1));
 			UI_Box *box = UI_BoxMake(UI_BoxFlag_DrawBackground |
-															 UI_BoxFlag_DrawBorder |
-															 UI_BoxFlag_Clickable |
-															 UI_BoxFlag_HotAnimation |
-															 UI_BoxFlag_ActiveAnimation,
-															 data[i].string);
+									 UI_BoxFlag_DrawBorder |
+									 UI_BoxFlag_Clickable |
+									 UI_BoxFlag_HotAnimation |
+									 UI_BoxFlag_ActiveAnimation,
+									 data[i].string);
 			UI_Comm comm = UI_CommFromBox(box);
-			if(comm.pressed)
+			if (comm.pressed)
 			{
 				*data[i].val = true;
-				for(U32 j = 0; j < data_count; ++j)
+				for (U32 j = 0; j < data_count; ++j)
 				{
-					if(i != j)
+					if (i != j)
 					{
 						*data[j].val = false;
 					}
 				}
 			}
-			if(*(data[i].val))
+			if (*(data[i].val))
 			{
 				UI_Parent(box)
 				{
@@ -650,11 +650,11 @@ UI_Radio(UI_RadioData *data, U32 data_count, String8 string)
 					UI_NextCornerRadius4(7.5f);
 
 					UI_Box *inner_box = UI_BoxMake(UI_BoxFlag_FixedPos |
-																				 UI_BoxFlag_AnimateScale |
-																				 UI_BoxFlag_AnimateStart |
-																				 UI_BoxFlag_DrawBackground |
-																				 UI_BoxFlag_DrawBorder,
-																				 PushStr8F(UI_FrameArena(), "%d", i));
+												   UI_BoxFlag_AnimateScale |
+												   UI_BoxFlag_AnimateStart |
+												   UI_BoxFlag_DrawBackground |
+												   UI_BoxFlag_DrawBorder,
+												   PushStr8F(UI_FrameArena(), "%d", i));
 				}
 			}
 			UI_Spacer(UI_Em(0.5f));
@@ -707,7 +707,7 @@ UI_PushScrollableContainer(String8 string)
 
 	F32 content_dim[Axis2_COUNT] = {0};
 
-	if(content_box)
+	if (content_box)
 	{
 		content_dim[Axis2_X] = content_box->calc_size[Axis2_X];
 		content_dim[Axis2_Y] = content_box->calc_size[Axis2_Y];
@@ -731,36 +731,36 @@ UI_PushScrollableContainer(String8 string)
 		UI_NextBackgroundColor(ui_state->theme.window_color);
 		UI_NextChildLayoutCorner(UI_Corner_BottomLeft);
 		view_box = UI_BoxMake(UI_BoxFlag_DrawBackground |
-													UI_BoxFlag_DrawBorder, Str8Lit("ContentBox"));
+							  UI_BoxFlag_DrawBorder, Str8Lit("ContentBox"));
 		UI_Comm comm = UI_CommFromBox(view_box);
 
 		view_dim[Axis2_X] = floorf(view_box->calc_size[Axis2_X]);
 		view_dim[Axis2_Y] = floorf(view_box->calc_size[Axis2_Y]);
 
-		if(comm.scroll)
+		if (comm.scroll)
 		{
 			F32 scroll_speed = 100;
-			if(reverse_scroll_y)
+			if (reverse_scroll_y)
 				container->scroll.y -= comm.scroll * scroll_speed;
 			else
 				container->scroll.y += comm.scroll * scroll_speed;
 
 			scrolling_with_mousewheel = true;
 		}
-		if(comm.page_up)
+		if (comm.page_up)
 		{
 			F32 scroll_speed = -view_dim[Axis2_Y];
-			if(reverse_scroll_y)
+			if (reverse_scroll_y)
 				container->scroll.y -= scroll_speed;
 			else
 				container->scroll.y += scroll_speed;
 			scrolling_with_mousewheel = true;
 		}
 
-		if(comm.page_down)
+		if (comm.page_down)
 		{
 			F32 scroll_speed = view_dim[Axis2_Y];
-			if(reverse_scroll_y)
+			if (reverse_scroll_y)
 				container->scroll.y -= scroll_speed;
 			else
 				container->scroll.y += scroll_speed;
@@ -773,11 +773,11 @@ UI_PushScrollableContainer(String8 string)
 		B32 need_scrollbar_y = overflow_y > 0;
 		B32 need_scrollbar_x = overflow_x > 0;
 
-		if(!need_scrollbar_y)
+		if (!need_scrollbar_y)
 		{
 			content_dim[Axis2_Y] = view_dim[Axis2_Y];
 		}
-		if(!need_scrollbar_x)
+		if (!need_scrollbar_x)
 		{
 			content_dim[Axis2_X] = view_dim[Axis2_X];
 		}
@@ -785,17 +785,17 @@ UI_PushScrollableContainer(String8 string)
 		UI_NextSize2(UI_Pixels(scrollbar_size), UI_Fill());
 		UI_NextChildLayoutAxis(Axis2_Y);
 		UI_Box *right_scrollbar = UI_BoxMake(UI_BoxFlag_Clickable |
-																				 UI_BoxFlag_DrawBorder |
-																				 UI_BoxFlag_DrawBackground |
-																				 UI_BoxFlag_HotAnimation |
-																				 UI_BoxFlag_ActiveAnimation,
-																				 Str8Lit("Right border"));
+											 UI_BoxFlag_DrawBorder |
+											 UI_BoxFlag_DrawBackground |
+											 UI_BoxFlag_HotAnimation |
+											 UI_BoxFlag_ActiveAnimation,
+											 Str8Lit("Right border"));
 		UI_Comm right_scrollbar_comm = UI_CommFromBox(right_scrollbar);
 
-		if(right_scrollbar_comm.dragging)
+		if (right_scrollbar_comm.dragging)
 		{
 			dragging_scroll_bar = true;
-			if(reverse_scroll_y)
+			if (reverse_scroll_y)
 			{
 				container->scroll.y -= ((right_scrollbar_comm.drag_delta.y) / right_scrollbar->calc_size[Axis2_Y]) * content_dim[Axis2_Y];
 			}
@@ -809,7 +809,7 @@ UI_PushScrollableContainer(String8 string)
 
 		container->scroll.y = Clamp(0, container->scroll.y, overflow_y);
 
-		if(reverse_scroll_y)
+		if (reverse_scroll_y)
 		{
 			scroll_y = overflow_y - container->scroll.y;
 		}
@@ -821,9 +821,9 @@ UI_PushScrollableContainer(String8 string)
 
 		UI_Parent(right_scrollbar)
 		{
-			if(content_dim[Axis2_Y] != 0)
+			if (content_dim[Axis2_Y] != 0)
 			{
-				if(overflow_y != 0)
+				if (overflow_y != 0)
 				{
 					F32 spacer_size = roundf(((scroll_y) / overflow_y) * (right_scrollbar->calc_size[Axis2_Y] - ((view_dim[Axis2_Y] / content_dim[Axis2_Y]) * right_scrollbar->calc_size[Axis2_Y])));
 					UI_Spacer(UI_Pixels(spacer_size));
@@ -831,15 +831,15 @@ UI_PushScrollableContainer(String8 string)
 
 				UI_NextBackgroundColor(V4(0.0f, 0.3f, 0.4f, 1.0f));
 				UI_NextSize2(UI_Pct(1), UI_Pct(view_dim[Axis2_Y] / content_dim[Axis2_Y]));
-				if(scrolling_with_mousewheel)
+				if (scrolling_with_mousewheel)
 				{
 					UI_NextBoxFlags(UI_BoxFlag_AnimateX | UI_BoxFlag_AnimateY);
 				}
 				UI_Box *right_scrollbar_button = UI_BoxMake(UI_BoxFlag_DrawBorder |
-																										UI_BoxFlag_DrawBackground,
-																										Str8Lit("Right scrollbar button"));
+															UI_BoxFlag_DrawBackground,
+															Str8Lit("Right scrollbar button"));
 
-				if(right_scrollbar_button->calc_pos[Axis2_Y] != right_scrollbar_button->target_pos[Axis2_Y])
+				if (right_scrollbar_button->calc_pos[Axis2_Y] != right_scrollbar_button->target_pos[Axis2_Y])
 				{
 					right_scrollbar_button->flags |= UI_BoxFlag_AnimateX | UI_BoxFlag_AnimateY;
 				}
@@ -851,14 +851,14 @@ UI_PushScrollableContainer(String8 string)
 	{
 		UI_NextSize2(UI_Pixels(container_width - scrollbar_size), UI_Pixels(scrollbar_size));
 		UI_Box *down_scrollbar = UI_BoxMake(UI_BoxFlag_DrawBorder |
-																				UI_BoxFlag_DrawBackground |
-																				UI_BoxFlag_HotAnimation |
-																				UI_BoxFlag_Clickable |
-																				UI_BoxFlag_ActiveAnimation,
-																				Str8Lit("Down border"));
+											UI_BoxFlag_DrawBackground |
+											UI_BoxFlag_HotAnimation |
+											UI_BoxFlag_Clickable |
+											UI_BoxFlag_ActiveAnimation,
+											Str8Lit("Down border"));
 		UI_Comm down_scrollbar_comm = UI_CommFromBox(down_scrollbar);
 
-		if(down_scrollbar_comm.dragging)
+		if (down_scrollbar_comm.dragging)
 		{
 			container->scroll.x += ((down_scrollbar_comm.drag_delta.x) / (down_scrollbar->calc_size[Axis2_X])) * content_dim[Axis2_X];
 		}
@@ -866,16 +866,16 @@ UI_PushScrollableContainer(String8 string)
 		container->scroll.x = Clamp(0, container->scroll.x, overflow_x);
 		UI_Parent(down_scrollbar)
 		{
-			if(content_dim[Axis2_X] != 0)
+			if (content_dim[Axis2_X] != 0)
 			{
-				if(overflow_x != 0)
+				if (overflow_x != 0)
 				{
 					UI_Spacer(UI_Pixels((container->scroll.x / overflow_x) * (down_scrollbar->calc_size[Axis2_X] - ((view_dim[Axis2_X] / content_dim[Axis2_X]) * down_scrollbar->calc_size[Axis2_X]))));
 				}
 				UI_NextBackgroundColor(V4(0.0f, 0.3f, 0.4f, 1.0f));
 				UI_NextSize2(UI_Pct(view_dim[Axis2_X] / content_dim[Axis2_X]), UI_Pct(1));
 				UI_Box *down_scrollbar_button = UI_BoxMake(UI_BoxFlag_DrawBorder |
-																									 UI_BoxFlag_DrawBackground, Str8Lit("Down scrollbar button"));
+														   UI_BoxFlag_DrawBackground, Str8Lit("Down scrollbar button"));
 			}
 		}
 
@@ -894,17 +894,17 @@ UI_PushScrollableContainer(String8 string)
 	UI_NextSize2(UI_SumOfChildren(), UI_SumOfChildren());
 	UI_NextBackgroundColor(V4(1.0f, 0.0f, 1.0f, 1.0f));
 
-	if(scrolling_with_mousewheel)
+	if (scrolling_with_mousewheel)
 	{
 		UI_NextBoxFlags(UI_BoxFlag_AnimateY);
 	}
 	UI_NextChildLayoutAxis(Axis2_Y);
 	UI_NextChildLayoutCorner(UI_Corner_BottomLeft);
 	content_box = UI_BoxMake(0,
-													 Str8Lit("ScrollCalcBox"));
+							 Str8Lit("ScrollCalcBox"));
 
 #if 1
-	if(content_box->calc_pos[Axis2_Y] != content_box->target_pos[Axis2_Y])
+	if (content_box->calc_pos[Axis2_Y] != content_box->target_pos[Axis2_Y])
 	{
 		content_box->flags |= UI_BoxFlag_AnimateX | UI_BoxFlag_AnimateY;
 	}

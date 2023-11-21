@@ -21,14 +21,14 @@ UITest()
 	UI_NextRelativePos2(300, 300);
 	UI_NextBackgroundColor(ui_state->theme.window_color);
 	UI_Box *box2 = UI_BoxMake(UI_BoxFlag_DrawBackground |
-														UI_BoxFlag_DrawBorder |
-														UI_BoxFlag_DrawDropShadow |
-														UI_BoxFlag_FixedX |
-														UI_BoxFlag_FixedY |
-														UI_BoxFlag_AnimateWidth |
-														UI_BoxFlag_AnimateHeight |
-														UI_BoxFlag_Clip,
-														Str8Lit("My box2"));
+							  UI_BoxFlag_DrawBorder |
+							  UI_BoxFlag_DrawDropShadow |
+							  UI_BoxFlag_FixedX |
+							  UI_BoxFlag_FixedY |
+							  UI_BoxFlag_AnimateWidth |
+							  UI_BoxFlag_AnimateHeight |
+							  UI_BoxFlag_Clip,
+							  Str8Lit("My box2"));
 	UI_Size tree_spacing = UI_Em(0.3f);
 
 	local_persist Vec4F32 color_test = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -167,7 +167,7 @@ UITest()
 			UI_NextSize2(UI_SumOfChildren(), UI_SumOfChildren());
 			UI_Column()
 			{
-				for(U32 i = 0; i < 100; ++i)
+				for (U32 i = 0; i < 100; ++i)
 				{
 					UI_Text(Str8Lit("Hello"));
 				}
@@ -178,7 +178,7 @@ UITest()
 
 			local_persist char input_buffer[256] = {0};
 			UI_NextSize2(UI_Em(10), UI_Em(1.5f));
-			if(UI_TextInput(input_buffer, sizeof(input_buffer), Str8Lit("Your username")).enter)
+			if (UI_TextInput(input_buffer, sizeof(input_buffer), Str8Lit("Your username")).enter)
 			{
 				printf("Enter\n");
 			}
@@ -221,11 +221,11 @@ EntryPoint(String8List args)
 		R_LoadedBitmap loaded_bitmaps[16] = {0};
 		TempMemoryArena scratch = GetScratch(0, 0);
 
-		for(U32 i = 0; i < 16; ++i)
+		for (U32 i = 0; i < 16; ++i)
 		{
 			S32 channels = 0;
 			String8 path = {0};
-			if(i < 10)
+			if (i < 10)
 			{
 				path = PushStr8F(scratch.arena, "../res/test/Tiles/tile_000%d.png", i);
 			}
@@ -235,13 +235,13 @@ EntryPoint(String8List args)
 			}
 
 			loaded_bitmaps[i].data = stbi_load((const char *)path.str,
-																				 &loaded_bitmaps[i].dim.width, &loaded_bitmaps[i].dim.height, &channels, 0);
+											   &loaded_bitmaps[i].dim.width, &loaded_bitmaps[i].dim.height, &channels, 0);
 		}
 		ReleaseScratch(scratch);
 
 		atlas = R_PackBitmapsIntoTextureAtlas(&permanent_arena, 128, 128, loaded_bitmaps, 16, 1);
 
-		for(U32 i = 0; i < 16; ++i)
+		for (U32 i = 0; i < 16; ++i)
 		{
 			stbi_image_free(loaded_bitmaps[i].data);
 		}
@@ -257,17 +257,17 @@ EntryPoint(String8List args)
 	F64 start_counter = OS_SecondsSinceAppStart();
 	B32 running = true;
 
-	while(running)
+	while (running)
 	{
 		TempMemoryArena scratch = GetScratch(0, 0);
 
 		OS_EventList *event_list = OS_GatherEventsFromWindow(scratch.arena);
 
-		for(OS_EventNode *node = event_list->first;
-				node != 0;
-				node = node->next)
+		for (OS_EventNode *node = event_list->first;
+			 node != 0;
+			 node = node->next)
 		{
-			switch(node->event.type)
+			switch (node->event.type)
 			{
 				case OS_EventType_Quit:
 				{
@@ -276,7 +276,7 @@ EntryPoint(String8List args)
 
 				case OS_EventType_KeyPress:
 				{
-					if(node->event.key == OS_Key_F11)
+					if (node->event.key == OS_Key_F11)
 					{
 						OS_ToggleFullscreen(window);
 					}
@@ -305,7 +305,7 @@ EntryPoint(String8List args)
 
 		local_persist char input_buffer[256] = {0};
 		UI_NextSize2(UI_Em(10), UI_Em(1.5f));
-		if(UI_TextInput(input_buffer, sizeof(input_buffer), Str8Lit("Your username")).enter)
+		if (UI_TextInput(input_buffer, sizeof(input_buffer), Str8Lit("Your username")).enter)
 		{
 			printf("Enter\n");
 		}

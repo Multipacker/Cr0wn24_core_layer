@@ -23,7 +23,7 @@ D3D11_Init(OS_Window *window)
 #endif
 		D3D_FEATURE_LEVEL levels[] = {D3D_FEATURE_LEVEL_11_0};
 		hr = D3D11CreateDevice(0, D3D_DRIVER_TYPE_HARDWARE, 0, flags, levels, ArrayCount(levels),
-													 D3D11_SDK_VERSION, &d3d11_state.device, 0, &d3d11_state.context);
+							   D3D11_SDK_VERSION, &d3d11_state.device, 0, &d3d11_state.context);
 		AssertHR(hr);
 	}
 
@@ -252,8 +252,8 @@ D3D11_End(Vec4F32 clear_color)
 	if(d3d11_state.rtview)
 	{
 		for(Batch2DNode *node = r_state->render_data.batch_list->first;
-				node != 0;
-				node = node->next)
+			node != 0;
+			node = node->next)
 		{
 			Batch2D *batch = node->batch;
 			// output viewport covering all client area of window
