@@ -212,7 +212,14 @@ EntryPoint(String8List args)
 
 	OS_Window *window = OS_CreateWindow(Str8Lit("Test"), 0, 0, 800, 800, true);
 
+	r_state = OS_AllocMem(sizeof(R_State));
+	r_state->GPULoadTexture = D3D11_LoadTexture;
+
 	D3D11_Init(window);
+
+
+	ui_state = OS_AllocMem(sizeof(UI_State));
+	UI_SelectState(ui_state);
 
 	R_Texture tile_atlas = R_LoadTexture(Str8Lit("../res/test/Tilemap/tilemap_packed.png"));
 
@@ -298,13 +305,14 @@ EntryPoint(String8List args)
 		R_PushRect(V2(50, 500), V2(500, 1000), .color = V4(0, 0, 0, 1), .corner_radius = corner_radius, .edge_softness = 1);
 		R_PushRect(V2(50, 500), V2(500, 1000), .color = V4(1, 0, 0, 1), .corner_radius = corner_radius, .edge_softness = 1, .border_thickness = 0.5f);
 
-		UI_Begin(UI_DefaultTheme(), 20, event_list, dt);
+		UI_Begin(UI_DefaultTheme(), event_list, dt);
 
 		UITest();
 
 		UI_End();
 
 		R_End();
+		D3D11_End(V4(0.1f, 0.1f, 0.1f, 1.0f));
 
 		F64 end_counter = OS_SecondsSinceAppStart();
 		dt = end_counter - start_counter;
