@@ -52,13 +52,8 @@ R_RectF32Match(RectF32 a, RectF32 b)
 	return (a.x0 == b.x0 && a.x1 == b.x1 && a.y0 == b.y0 && a.y1 == b.y1);
 }
 
-#if R_DEBUG
-internal void
-R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params, char *file, S32 line)
-#else
 internal void
 R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params)
-#endif
 {
 	RenderData *render_data = &r_state->render_data;
 	Batch2DNode *batch_node = render_data->batch_list->last;
@@ -93,11 +88,6 @@ R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params)
 			batch_node->batch = PushStruct(r_state->arena, Batch2D);
 			batch_node->batch->num_rects = 0;
 			batch_node->batch->clip_rect = r_state->clip_rect_stack.first->rect;
-
-#if R_DEBUG
-			batch_node->batch->file = file;
-			batch_node->batch->line = line;
-#endif
 
 			DLL_PushBack(render_data->batch_list->first, render_data->batch_list->last, batch_node);
 		}
