@@ -1335,7 +1335,8 @@ internal void UI_Animate(UI_Box *root, F32 dt)
 	}
 }
 
-internal void UI_Draw(UI_Box *root)
+internal void
+UI_Draw(UI_Box *root)
 {
 	R_PushClipRect(root->clip_rect);
 
@@ -1412,10 +1413,8 @@ internal void UI_Draw(UI_Box *root)
 				text_style->text_edge_padding[Axis2_Y] * root->text_style.font_size,
 			};
 
-#if 1
 			R_PushGlyphIndex(UI_AlignDimInRect(glyph_dim, root->calc_rect, text_style->text_align, padding),
 											 text_style->font_size, ui_state->font, text_style->icon, V4(1.0f, 1.0f, 1.0f, 1.0f));
-#endif
 		}
 		else
 		{

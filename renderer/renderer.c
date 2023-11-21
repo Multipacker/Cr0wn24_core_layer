@@ -81,7 +81,7 @@ R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params)
 		B32 previous_was_white_texture = false;
 		if(batch_node)
 		{
-			if(R_HandleMatch(batch_node->batch->tex.handle, r_state->white_texture.handle) && !rect_match)
+			if(R_HandleMatch(batch_node->batch->tex.handle, r_state->white_texture.handle) && rect_match)
 			{
 				previous_was_white_texture = true;
 			}
