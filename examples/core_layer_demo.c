@@ -285,7 +285,7 @@ EntryPoint(String8List args)
 		}
 
 		R_Begin(scratch.arena);
-#if 0
+#if 1
 		R_PushText(V2(1700, 50), 20, &font, Str8Lit("Hello, world!"), V4(1.0f, 1.0f, 1.0f, 1.0f));
 		R_PushRect(V2(1200 - 50, 50), V2(1200 + 450, 50 + 65), .color = V4(0.5, 0, 0, 1), .corner_radius = V4(10, 10, 10, 10), .edge_softness = 1);
 		R_PushRect(V2(1200 - 50, 50), V2(1200 + 450, 50 + 65), .color = V4(1, 1, 1, 1), .corner_radius = V4(10, 10, 10, 10), .edge_softness = 1, .border_thickness = 1);
@@ -301,16 +301,7 @@ EntryPoint(String8List args)
 #endif
 		UI_Begin(UI_DefaultTheme(), event_list, dt);
 
-		// UITest();
-
-		local_persist char input_buffer[256] = {0};
-		UI_NextSize2(UI_Em(10), UI_Em(1.5f));
-		if (UI_TextInput(input_buffer, sizeof(input_buffer), Str8Lit("Your username")).enter)
-		{
-			printf("Enter\n");
-		}
-
-		UI_Button(Str8Lit("Hello"));
+		UITest();
 
 		UI_End();
 
