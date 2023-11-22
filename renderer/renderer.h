@@ -5,6 +5,7 @@ typedef enum R_IconIndex
 {
 	R_IconIndex_Check = 183,
 	R_IconIndex_Cross = 184,
+	R_IconIndex_Cogwheel = 189,
 	R_IconIndex_Angle_Down = 215,
 	R_IconIndex_Angle_Up = 216,
 	R_IconIndex_Angle_Right = 217,
