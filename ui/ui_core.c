@@ -23,7 +23,7 @@ UI_DefaultTheme()
 internal UI_Box *
 UI_TopParent()
 {
-	if(ui_state->parent_stack.first)
+	if (ui_state->parent_stack.first)
 	{
 		return(ui_state->parent_stack.first->box);
 	}
@@ -73,7 +73,7 @@ UI_PushParent(UI_Box *box)
 	UI_ParentStackNode *node = PushStruct(UI_FrameArena(), UI_ParentStackNode);
 	node->box = box;
 	StackPush(ui_state->parent_stack.first, node);
-	if(box->flags & UI_BoxFlag_Clip)
+	if (box->flags & UI_BoxFlag_Clip)
 	{
 		R_PushClipRect(box->calc_rect);
 	}
@@ -82,7 +82,7 @@ UI_PushParent(UI_Box *box)
 internal void
 UI_PopParent()
 {
-	if(ui_state->parent_stack.first->box->flags & UI_BoxFlag_Clip)
+	if (ui_state->parent_stack.first->box->flags & UI_BoxFlag_Clip)
 	{
 		R_PopClipRect();
 	}
@@ -93,7 +93,7 @@ internal UI_LayoutStyle *
 UI_PushLayout()
 {
 	UI_LayoutStyle *layout = PushStruct(&ui_state->frame_arena, UI_LayoutStyle);
-	if(ui_state->layout_stack.first)
+	if (ui_state->layout_stack.first)
 	{
 		CopyStruct(layout, ui_state->layout_stack.first);
 	}
@@ -113,7 +113,7 @@ internal UI_LayoutStyle *
 UI_GetAutoPopLayout()
 {
 	UI_LayoutStyle *layout = UI_TopLayout();
-	if(!ui_state->layout_stack.auto_pop)
+	if (!ui_state->layout_stack.auto_pop)
 	{
 		layout = UI_PushLayout();
 		ui_state->layout_stack.auto_pop = true;
@@ -128,7 +128,7 @@ UI_PushRectStyle()
 {
 	UI_RectStyle *rect_style = PushStruct(&ui_state->frame_arena, UI_RectStyle);
 	UI_RectStyle *first = UI_TopRectStyle();
-	if(first)
+	if (first)
 	{
 		CopyStruct(rect_style, first);
 	}
@@ -146,7 +146,7 @@ internal void UI_PopRectStyle()
 internal UI_RectStyle *UI_GetAutoPopRectStyle()
 {
 	UI_RectStyle *rect_style = UI_TopRectStyle();
-	if(!ui_state->rect_style_stack.auto_pop)
+	if (!ui_state->rect_style_stack.auto_pop)
 	{
 		rect_style = UI_PushRectStyle();
 		ui_state->rect_style_stack.auto_pop = true;
@@ -160,7 +160,7 @@ internal UI_TextStyle *UI_PushTextStyle()
 {
 	UI_TextStyle *text_style = PushStruct(&ui_state->frame_arena, UI_TextStyle);
 	UI_TextStyle *first = UI_TopTextStyle();
-	if(first)
+	if (first)
 	{
 		CopyStruct(text_style, first);
 	}
@@ -178,7 +178,7 @@ internal void UI_PopTextStyle()
 internal UI_TextStyle *UI_GetAutoPopTextStyle()
 {
 	UI_TextStyle *text_style = UI_TopTextStyle();
-	if(!ui_state->text_style_stack.auto_pop)
+	if (!ui_state->text_style_stack.auto_pop)
 	{
 		text_style = UI_PushTextStyle();
 		ui_state->text_style_stack.auto_pop = true;
@@ -198,7 +198,7 @@ internal void UI_PushString(String8 string)
 internal void UI_PushStringF(String8 string)
 {
 	S32 triple_pound_pos = Str8FindSubStr8(string, Str8Lit("###"));
-	if(triple_pound_pos >= 0)
+	if (triple_pound_pos >= 0)
 	{
 		String8 new_string = {0};
 		new_string.size = string.size - (triple_pound_pos + 2);
@@ -250,12 +250,12 @@ internal U32 UI_HashStringStack(String8Stack string_stack, U32 seed)
 {
 	String8StackNode *node = string_stack.first;
 	U32 crc = ~seed;
-	while(node)
+	while (node)
 	{
 		String8 string = node->string;
 		U8* data = (U8 *)string.str;
 		U32* crc32_lut = crc32_loookup_table;
-		while(string.size-- != 0)
+		while (string.size-- != 0)
 			crc = (crc >> 8) ^ crc32_lut[(crc & 0xFF) ^ *data++];
 
 		node = node->next;
@@ -267,10 +267,10 @@ internal UI_Key UI_KeyFromString(String8 string)
 {
 	UI_Key result = {0};
 
-	if(string.size > 0)
+	if (string.size > 0)
 	{
 		S32 triple_pound_pos = Str8FindSubStr8(string, Str8Lit("###"));
-		if(triple_pound_pos >= 0)
+		if (triple_pound_pos >= 0)
 		{
 			String8 new_string = {0};
 			new_string.size = 3;
@@ -367,9 +367,9 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 
 	B32 inside_box = R_PointInsideRect(mouse, box->calc_rect);
 	B32 inside_parent_box = true;
-	if(box->parent)
+	if (box->parent)
 	{
-		if(UI_BoxHasFlag(box->parent, UI_BoxFlag_Clip))
+		if (UI_BoxHasFlag(box->parent, UI_BoxFlag_Clip))
 		{
 			inside_parent_box = R_PointInsideRect(mouse, box->parent->calc_rect);
 		}
@@ -378,9 +378,9 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 	OS_EventList *event_list = ui_state->os_event_list;
 
 	B32 previous_still_active = false;
-	if(!UI_KeyIsNull(ui_state->active_key))
+	if (!UI_KeyIsNull(ui_state->active_key))
 	{
-		if(!UI_KeyMatch(ui_state->active_key, box->key))
+		if (!UI_KeyMatch(ui_state->active_key, box->key))
 		{
 			previous_still_active = true;
 		}
@@ -388,33 +388,33 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 
 	B32 capture_input = false;
 
-	if(!ui_state->inside_popup ||
-		 ui_state->building_popup)
+	if (!ui_state->inside_popup ||
+		ui_state->building_popup)
 	{
-		if(!previous_still_active)
+		if (!previous_still_active)
 		{
-			if(inside_box && inside_parent_box)
+			if (inside_box && inside_parent_box)
 			{
 				capture_input = true;
 			}
 		}
 	}
 
-	if(capture_input)
+	if (capture_input)
 	{
 		result.scroll = -OS_GetScroll();
 		result.hovering = true;
 		ui_state->hot_key = box->key;
-		for(OS_EventNode *node = event_list->first;
-				node != 0;
-				node = node->next)
+		for (OS_EventNode *node = event_list->first;
+			 node != 0;
+			 node = node->next)
 		{
 			OS_Event event = node->event;
-			switch(event.type)
+			switch (event.type)
 			{
 				case OS_EventType_KeyPress:
 				{
-					if(event.key == OS_Key_MouseLeft)
+					if (event.key == OS_Key_MouseLeft)
 					{
 						result.pressed = true;
 
@@ -427,7 +427,7 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 
 				case OS_EventType_KeyRelease:
 				{
-					if(event.key == OS_Key_MouseLeft)
+					if (event.key == OS_Key_MouseLeft)
 					{
 						result.clicked = true;
 
@@ -438,29 +438,29 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 		}
 	}
 
-	if(UI_IsFocused(box))
+	if (UI_IsFocused(box))
 	{
-		for(OS_EventNode *node = event_list->first;
-				node != 0;
-				node = node->next)
+		for (OS_EventNode *node = event_list->first;
+			 node != 0;
+			 node = node->next)
 		{
 			OS_Event event = node->event;
-			switch(event.type)
+			switch (event.type)
 			{
 				case OS_EventType_KeyPress:
 				{
-					if(event.key == OS_Key_Return ||
-						 event.key == OS_Key_Escape)
+					if (event.key == OS_Key_Return ||
+						event.key == OS_Key_Escape)
 					{
 						result.enter = true;
 						DLL_Remove(event_list->first, event_list->last, node);
 					}
-					else if(event.key == OS_Key_PageUp)
+					else if (event.key == OS_Key_PageUp)
 					{
 						result.page_up = true;
 						DLL_Remove(event_list->first, event_list->last, node);
 					}
-					else if(event.key == OS_Key_PageDown)
+					else if (event.key == OS_Key_PageDown)
 					{
 						result.page_down = true;
 						DLL_Remove(event_list->first, event_list->last, node);
@@ -470,7 +470,7 @@ internal UI_Comm UI_CommFromBox(UI_Box *box)
 		}
 	}
 
-	if(UI_IsActive(box))
+	if (UI_IsActive(box))
 	{
 		result.dragging = true;
 		ui_state->hot_key = box->key;
@@ -490,7 +490,7 @@ UI_CheckStringForPound(String8 string)
 {
 	String8 result = string;
 	S32 double_pound_pos = Str8FindSubStr8(string, Str8Lit("##"));
-	if(double_pound_pos >= 0)
+	if (double_pound_pos >= 0)
 	{
 		result = PushStr8Size(UI_FrameArena(), (char *)string.str, double_pound_pos);
 	}
@@ -536,14 +536,14 @@ internal UI_Box *UI_BoxFromKey(UI_Key key)
 {
 	UI_Box *result = 0;
 
-	if(!UI_KeyIsNull(key))
+	if (!UI_KeyIsNull(key))
 	{
 		U64 slot_index = key.key % ui_state->box_hash_map_count;
-		for(result = ui_state->box_hash_map[slot_index];
-				result != 0;
-				result = result->hash_next)
+		for (result = ui_state->box_hash_map[slot_index];
+			 result != 0;
+			 result = result->hash_next)
 		{
-			if(UI_KeyMatch(key, result->key))
+			if (UI_KeyMatch(key, result->key))
 			{
 				break;
 			}
@@ -561,7 +561,7 @@ internal UI_Box *UI_BoxMake(UI_BoxFlag flags, String8 string)
 
 	UI_Box *result = UI_BoxFromKey(key);
 
-	if(!result)
+	if (!result)
 	{
 		result = UI_BoxAlloc();
 		result->key = key;
@@ -569,7 +569,7 @@ internal UI_Box *UI_BoxMake(UI_BoxFlag flags, String8 string)
 		U32 slot = result->key.key % ui_state->box_hash_map_count;
 
 		UI_Box *hash_box = ui_state->box_hash_map[slot];
-		if(hash_box)
+		if (hash_box)
 		{
 			hash_box->hash_prev = result;
 			result->hash_next = hash_box;
@@ -590,7 +590,7 @@ internal UI_Box *UI_BoxMake(UI_BoxFlag flags, String8 string)
 	result->last = 0;
 	result->next = 0;
 	result->prev = 0;
-	if(parent)
+	if (parent)
 	{
 		DLL_PushBack(parent->first, parent->last, result);
 		result->parent = parent;
@@ -609,12 +609,12 @@ internal UI_Box *UI_BoxMake(UI_BoxFlag flags, String8 string)
 	{
 		result->flags |= layout->flags;
 
-		if(result->flags & UI_BoxFlag_FixedX)
+		if (result->flags & UI_BoxFlag_FixedX)
 		{
 			result->calc_rel_pos[Axis2_X] = layout->relative_pos[Axis2_X];
 		}
 
-		if(result->flags & UI_BoxFlag_FixedY)
+		if (result->flags & UI_BoxFlag_FixedY)
 		{
 			result->calc_rel_pos[Axis2_Y] = layout->relative_pos[Axis2_Y];
 		}
@@ -634,17 +634,17 @@ internal UI_Box *UI_BoxMake(UI_BoxFlag flags, String8 string)
 
 		result->clip_rect = r_state->clip_rect_stack.first->rect;
 
-		if(ui_state->layout_stack.auto_pop)
+		if (ui_state->layout_stack.auto_pop)
 		{
 			UI_PopLayout();
 			ui_state->layout_stack.auto_pop = false;
 		}
-		if(ui_state->rect_style_stack.auto_pop)
+		if (ui_state->rect_style_stack.auto_pop)
 		{
 			UI_PopRectStyle();
 			ui_state->rect_style_stack.auto_pop = false;
 		}
-		if(ui_state->text_style_stack.auto_pop)
+		if (ui_state->text_style_stack.auto_pop)
 		{
 			UI_PopTextStyle();
 			ui_state->text_style_stack.auto_pop = false;
@@ -660,7 +660,7 @@ internal UI_Box *UI_BoxMake(UI_BoxFlag flags, String8 string)
 
 internal B32 UI_BeginPopup(B32 *b)
 {
-	if(*b)
+	if (*b)
 	{
 		R_PushClipRect(ui_state->root->calc_rect);
 
@@ -671,9 +671,9 @@ internal B32 UI_BeginPopup(B32 *b)
 		base->popup_bool = b;
 
 		UI_Box *first = ui_state->popup_root->first;
-		while(first)
+		while (first)
 		{
-			if(first != base)
+			if (first != base)
 			{
 				*first->popup_bool = false;
 			}
@@ -686,17 +686,17 @@ internal B32 UI_BeginPopup(B32 *b)
 	else
 	{
 
-		if(ui_state->layout_stack.auto_pop)
+		if (ui_state->layout_stack.auto_pop)
 		{
 			UI_PopLayout();
 			ui_state->layout_stack.auto_pop = false;
 		}
-		if(ui_state->rect_style_stack.auto_pop)
+		if (ui_state->rect_style_stack.auto_pop)
 		{
 			UI_PopRectStyle();
 			ui_state->rect_style_stack.auto_pop = false;
 		}
-		if(ui_state->text_style_stack.auto_pop)
+		if (ui_state->text_style_stack.auto_pop)
 		{
 			UI_PopTextStyle();
 			ui_state->text_style_stack.auto_pop = false;
@@ -736,19 +736,19 @@ internal void UI_Begin(UI_Theme theme, OS_EventList *os_event_list, F64 dt)
 	B32 left_mouse_pressed = false;
 	B32 left_mouse_released = false;
 	OS_EventNode *event_node = os_event_list->first;
-	while(event_node)
+	while (event_node)
 	{
 		OS_Event event = event_node->event;
-		if(event.type == OS_EventType_KeyRelease)
+		if (event.type == OS_EventType_KeyRelease)
 		{
-			if(event.key == OS_Key_MouseLeft)
+			if (event.key == OS_Key_MouseLeft)
 			{
 				left_mouse_released = true;
 			}
 		}
-		else if(event.type == OS_EventType_KeyPress)
+		else if (event.type == OS_EventType_KeyPress)
 		{
-			if(event.key == OS_Key_MouseLeft)
+			if (event.key == OS_Key_MouseLeft)
 			{
 				left_mouse_pressed = true;
 			}
@@ -758,12 +758,12 @@ internal void UI_Begin(UI_Theme theme, OS_EventList *os_event_list, F64 dt)
 
 	ui_state->inside_popup = false;
 
-	if(ui_state->popup_root)
+	if (ui_state->popup_root)
 	{
 		UI_Box *first_popup_child = ui_state->popup_root->first;
-		while(first_popup_child)
+		while (first_popup_child)
 		{
-			if(R_PointInsideRect(ui_state->mouse_pos, first_popup_child->calc_rect))
+			if (R_PointInsideRect(ui_state->mouse_pos, first_popup_child->calc_rect))
 			{
 				ui_state->inside_popup = true;
 				break;
@@ -772,46 +772,46 @@ internal void UI_Begin(UI_Theme theme, OS_EventList *os_event_list, F64 dt)
 		}
 	}
 
-	for(U32 i = 0; i < ui_state->box_hash_map_count; ++i)
+	for (U32 i = 0; i < ui_state->box_hash_map_count; ++i)
 	{
 		UI_Box *box = ui_state->box_hash_map[i];
-		while(box)
+		while (box)
 		{
 			UI_Box *next = box->hash_next;
-			if(!UI_KeyIsNull(box->key))
+			if (!UI_KeyIsNull(box->key))
 			{
-				if(UI_KeyMatch(ui_state->active_key, box->key))
+				if (UI_KeyMatch(ui_state->active_key, box->key))
 				{
-					if(left_mouse_released)
+					if (left_mouse_released)
 					{
 						ui_state->active_key.key = 0;
 					}
 				}
-				if(UI_KeyMatch(ui_state->focus_key, box->key))
+				if (UI_KeyMatch(ui_state->focus_key, box->key))
 				{
-					if(left_mouse_pressed)
+					if (left_mouse_pressed)
 					{
 						ui_state->focus_key.key = 0;
 					}
 				}
 			}
-			if(!(box->flags & UI_BoxFlag_SaveState))
+			if (!(box->flags & UI_BoxFlag_SaveState))
 			{
-				if(box->last_frame_touched_index < (ui_state->frame - 1) ||
-					 UI_KeyIsNull(box->key))
+				if (box->last_frame_touched_index < (ui_state->frame - 1) ||
+					UI_KeyIsNull(box->key))
 				{
 
-					if(box == ui_state->box_hash_map[i])
+					if (box == ui_state->box_hash_map[i])
 					{
 						ui_state->box_hash_map[i] = box->hash_next;
 					}
 
-					if(box->hash_next)
+					if (box->hash_next)
 					{
 						box->hash_next->hash_prev = box->hash_prev;
 					}
 
-					if(box->hash_prev)
+					if (box->hash_prev)
 					{
 						box->hash_prev->hash_next = box->hash_next;
 					}
@@ -826,7 +826,7 @@ internal void UI_Begin(UI_Theme theme, OS_EventList *os_event_list, F64 dt)
 		}
 	}
 
-	if(!UI_KeyIsNull(ui_state->hot_key))
+	if (!UI_KeyIsNull(ui_state->hot_key))
 	{
 		UI_Box *hover_box = UI_BoxFromKey(ui_state->hot_key);
 		OS_SetHoverCursor(hover_box->hover_cursor);
@@ -868,9 +868,9 @@ internal void UI_Begin(UI_Theme theme, OS_EventList *os_event_list, F64 dt)
 
 	rect_style->border_thickness = 0.5f;
 	rect_style->corner_radius = V4(corner_radius,
-																 corner_radius,
-																 corner_radius,
-																 corner_radius);
+								   corner_radius,
+								   corner_radius,
+								   corner_radius);
 	rect_style->edge_softness = 1.0f;
 
 	UI_CreateRootParent();
@@ -882,7 +882,7 @@ internal void UI_Begin(UI_Theme theme, OS_EventList *os_event_list, F64 dt)
 	UI_Box *root2 = UI_BoxMake(0, Str8Lit("Root2"));
 
 	UI_Box *popup_root = UI_BoxMake(UI_BoxFlag_FixedX |
-																	UI_BoxFlag_FixedY, Str8Lit("PopupRoot"));
+									UI_BoxFlag_FixedY, Str8Lit("PopupRoot"));
 
 	ui_state->popup_root = popup_root;
 
@@ -897,7 +897,7 @@ internal void UI_SolveIndependentSizes(UI_Box *root)
 	Vec2F32 text_dim = R_GetTextDim(ui_state->font, root->display_string);
 
 	// NOTE(hampus): Calculate its size
-	switch(root->semantic_size[Axis2_X].kind)
+	switch (root->semantic_size[Axis2_X].kind)
 	{
 		case UI_SizeKind_Null:
 		{
@@ -930,7 +930,7 @@ internal void UI_SolveIndependentSizes(UI_Box *root)
 		InvalidCase;
 	}
 
-	switch(root->semantic_size[Axis2_Y].kind)
+	switch (root->semantic_size[Axis2_Y].kind)
 	{
 		case UI_SizeKind_Null:
 		{
@@ -963,9 +963,9 @@ internal void UI_SolveIndependentSizes(UI_Box *root)
 		InvalidCase;
 	}
 
-	for(UI_Box *child = root->first;
-			child != 0;
-			child = child->next)
+	for (UI_Box *child = root->first;
+		 child != 0;
+		 child = child->next)
 	{
 		UI_SolveIndependentSizes(child);
 	}
@@ -973,24 +973,24 @@ internal void UI_SolveIndependentSizes(UI_Box *root)
 
 internal void UI_SolveFill(UI_Box *root)
 {
-	for(S32 axis = 0; axis < Axis2_COUNT; ++axis)
+	for (S32 axis = 0; axis < Axis2_COUNT; ++axis)
 	{
-		if(root->semantic_size[axis].kind == UI_SizeKind_Fill)
+		if (root->semantic_size[axis].kind == UI_SizeKind_Fill)
 		{
-			if(axis == root->parent->child_layout_axis)
+			if (axis == root->parent->child_layout_axis)
 			{
 				F32 siblings_size = 0;
 				F32 num_siblings_with_fill = 0;
 
-				for(UI_Box *sibling = root->parent->first; sibling != 0; sibling = sibling->next)
+				for (UI_Box *sibling = root->parent->first; sibling != 0; sibling = sibling->next)
 				{
-					if(sibling->semantic_size[axis].kind == UI_SizeKind_Fill)
+					if (sibling->semantic_size[axis].kind == UI_SizeKind_Fill)
 					{
 						num_siblings_with_fill++;
 					}
 					else
 					{
-						if(!(sibling->flags & (UI_BoxFlag_FixedX << axis)))
+						if (!(sibling->flags & (UI_BoxFlag_FixedX << axis)))
 							siblings_size += sibling->target_size[axis];
 					}
 				}
@@ -1004,9 +1004,9 @@ internal void UI_SolveFill(UI_Box *root)
 		}
 	}
 
-	for(UI_Box *child = root->first;
-			child != 0;
-			child = child->next)
+	for (UI_Box *child = root->first;
+		 child != 0;
+		 child = child->next)
 	{
 		UI_SolveFill(child);
 	}
@@ -1014,13 +1014,13 @@ internal void UI_SolveFill(UI_Box *root)
 
 internal void UI_SolveUpwardsDependentSizes(UI_Box *root)
 {
-	for(U32 axis = 0; axis < Axis2_COUNT; ++axis)
+	for (U32 axis = 0; axis < Axis2_COUNT; ++axis)
 	{
-		if(root->semantic_size[axis].kind == UI_SizeKind_Pct)
+		if (root->semantic_size[axis].kind == UI_SizeKind_Pct)
 		{
 			Assert(root->parent);
 			F32 parent_size = 0;
-			if(root->parent->semantic_size[axis].kind == UI_SizeKind_Fill)
+			if (root->parent->semantic_size[axis].kind == UI_SizeKind_Fill)
 			{
 				// TODO(hampus): If some parent have already had their fill fixed,
 				// we don't need to redo them later.
@@ -1029,8 +1029,8 @@ internal void UI_SolveUpwardsDependentSizes(UI_Box *root)
 			else
 			{
 				Assert(root->parent->semantic_size[axis].kind == UI_SizeKind_Pixels ||
-							 root->parent->semantic_size[axis].kind == UI_SizeKind_TextContent ||
-							 root->parent->semantic_size[axis].kind == UI_SizeKind_Pct);
+					   root->parent->semantic_size[axis].kind == UI_SizeKind_TextContent ||
+					   root->parent->semantic_size[axis].kind == UI_SizeKind_Pct);
 				parent_size = root->parent->target_size[axis];
 			}
 
@@ -1038,9 +1038,9 @@ internal void UI_SolveUpwardsDependentSizes(UI_Box *root)
 		}
 	}
 
-	for(UI_Box *child = root->first;
-			child != 0;
-			child = child->next)
+	for (UI_Box *child = root->first;
+		 child != 0;
+		 child = child->next)
 	{
 		UI_SolveUpwardsDependentSizes(child);
 	}
@@ -1049,12 +1049,12 @@ internal void UI_SolveUpwardsDependentSizes(UI_Box *root)
 internal Vec2F32 UI_SolveDownwardDependentSizes(UI_Box *root)
 {
 	Vec2F32 result = {0};
-	if(root->semantic_size[Axis2_X].kind == UI_SizeKind_SumOfChildren ||
-		 root->semantic_size[Axis2_Y].kind == UI_SizeKind_SumOfChildren)
+	if (root->semantic_size[Axis2_X].kind == UI_SizeKind_SumOfChildren ||
+		root->semantic_size[Axis2_Y].kind == UI_SizeKind_SumOfChildren)
 	{
-		for(UI_Box *child = root->first;
-				child != 0;
-				child = child->next)
+		for (UI_Box *child = root->first;
+			 child != 0;
+			 child = child->next)
 		{
 			Vec2F32 size = UI_SolveDownwardDependentSizes(child);
 			F32 child_computed_size[2];
@@ -1064,19 +1064,19 @@ internal Vec2F32 UI_SolveDownwardDependentSizes(UI_Box *root)
 			Axis2 child_layout_axis = root->child_layout_axis;
 			Axis2 flipped_layout_axis = Flip(root->child_layout_axis);
 
-			if(!(child->flags & (UI_BoxFlag_FixedX << child_layout_axis)))
+			if (!(child->flags & (UI_BoxFlag_FixedX << child_layout_axis)))
 			{
-				if(root->semantic_size[child_layout_axis].kind == UI_SizeKind_SumOfChildren)
+				if (root->semantic_size[child_layout_axis].kind == UI_SizeKind_SumOfChildren)
 				{
 					root->target_size[child_layout_axis] += (child_computed_size[child_layout_axis]);
 				}
 			}
 
-			if(!(child->flags & (UI_BoxFlag_FixedX << flipped_layout_axis)))
+			if (!(child->flags & (UI_BoxFlag_FixedX << flipped_layout_axis)))
 			{
-				if(root->semantic_size[flipped_layout_axis].kind == UI_SizeKind_SumOfChildren)
+				if (root->semantic_size[flipped_layout_axis].kind == UI_SizeKind_SumOfChildren)
 				{
-					if((child_computed_size[flipped_layout_axis]) > root->target_size[flipped_layout_axis])
+					if ((child_computed_size[flipped_layout_axis]) > root->target_size[flipped_layout_axis])
 					{
 						root->target_size[flipped_layout_axis] = child_computed_size[flipped_layout_axis];
 					}
@@ -1086,9 +1086,9 @@ internal Vec2F32 UI_SolveDownwardDependentSizes(UI_Box *root)
 	}
 	else
 	{
-		for(UI_Box *child = root->first;
-				child != 0;
-				child = child->next)
+		for (UI_Box *child = root->first;
+			 child != 0;
+			 child = child->next)
 		{
 			UI_SolveDownwardDependentSizes(child);
 		}
@@ -1102,33 +1102,33 @@ internal Vec2F32 UI_SolveDownwardDependentSizes(UI_Box *root)
 
 internal void UI_CalculateFinalRect(UI_Box *root)
 {
-	if(root->parent)
+	if (root->parent)
 	{
 		Axis2 axis = root->parent->child_layout_axis;
-		if(!(root->flags & (UI_BoxFlag_FixedX << axis)))
+		if (!(root->flags & (UI_BoxFlag_FixedX << axis)))
 		{
-			if(root->prev)
+			if (root->prev)
 			{
 				// NOTE(hampus): Find the previous box without a fixed pos.
 				UI_Box *prev = 0;
-				for(prev = root->prev;
-						prev != 0;
-						prev = prev->prev)
+				for (prev = root->prev;
+					 prev != 0;
+					 prev = prev->prev)
 				{
-					if(!(prev->flags & (UI_BoxFlag_FixedX << axis)))
+					if (!(prev->flags & (UI_BoxFlag_FixedX << axis)))
 					{
 						break;
 					}
 				}
 
-				if(!prev)
+				if (!prev)
 				{
 					root->calc_rel_pos[axis] = 0;
 				}
 				else
 				{
 					// TODO(hampus): Have a flag for deciding this?
-					if(UI_BoxHasFlag(root->prev, UI_BoxFlag_AnimateScale))
+					if (UI_BoxHasFlag(root->prev, UI_BoxFlag_AnimateScale))
 					{
 						root->calc_rel_pos[axis] = prev->calc_rel_pos[axis] + prev->target_size[axis];
 					}
@@ -1144,7 +1144,7 @@ internal void UI_CalculateFinalRect(UI_Box *root)
 			}
 		}
 
-		if(UI_BoxHasFlag(root, UI_BoxFlag_CenterPos))
+		if (UI_BoxHasFlag(root, UI_BoxFlag_CenterPos))
 		{
 			F32 parent_center_x = root->parent->calc_pos[Axis2_X] + root->parent->calc_size[Axis2_X] / 2;
 			F32 parent_center_y = root->parent->calc_pos[Axis2_Y] + root->parent->calc_size[Axis2_Y] / 2;
@@ -1154,7 +1154,7 @@ internal void UI_CalculateFinalRect(UI_Box *root)
 		}
 		else
 		{
-			switch(root->parent->child_layout_corner)
+			switch (root->parent->child_layout_corner)
 			{
 				case UI_Corner_TopLeft:
 				{
@@ -1195,9 +1195,9 @@ internal void UI_CalculateFinalRect(UI_Box *root)
 
 	F32 animation_delta = (F32)ui_state->dt * ui_state->animation_speed;
 
-	if(!UI_BoxHasFlag(root, UI_BoxFlag_AnimateStart))
+	if (!UI_BoxHasFlag(root, UI_BoxFlag_AnimateStart))
 	{
-		if(root->last_frame_touched_index == root->frame_created_index)
+		if (root->last_frame_touched_index == root->frame_created_index)
 		{
 			root->calc_pos[Axis2_X] = root->target_pos[Axis2_X];
 			root->calc_pos[Axis2_Y] = root->target_pos[Axis2_Y];
@@ -1209,9 +1209,9 @@ internal void UI_CalculateFinalRect(UI_Box *root)
 		}
 	}
 
-	for(U32 axis = 0; axis < Axis2_COUNT; ++axis)
+	for (U32 axis = 0; axis < Axis2_COUNT; ++axis)
 	{
-		if(UI_BoxHasFlag(root, (UI_BoxFlag_AnimateX << axis)))
+		if (UI_BoxHasFlag(root, (UI_BoxFlag_AnimateX << axis)))
 		{
 			root->calc_pos[axis] = root->calc_pos[axis] + (root->target_pos[axis] - root->calc_pos[axis]) * animation_delta;
 		}
@@ -1219,15 +1219,15 @@ internal void UI_CalculateFinalRect(UI_Box *root)
 		{
 			root->calc_pos[axis] = root->target_pos[axis];
 		}
-		if(Abs(root->calc_pos[axis] - root->target_pos[axis]) <= 1)
+		if (Abs(root->calc_pos[axis] - root->target_pos[axis]) <= 1)
 		{
 			root->calc_pos[axis] = root->target_pos[axis];
 		}
 	}
 
-	for(U32 axis = 0; axis < Axis2_COUNT; ++axis)
+	for (U32 axis = 0; axis < Axis2_COUNT; ++axis)
 	{
-		if(UI_BoxHasFlag(root, (UI_BoxFlag_AnimateWidth << axis)))
+		if (UI_BoxHasFlag(root, (UI_BoxFlag_AnimateWidth << axis)))
 		{
 			root->calc_size[axis] = root->calc_size[axis] + (root->target_size[axis] - root->calc_size[axis]) * animation_delta;
 		}
@@ -1237,7 +1237,7 @@ internal void UI_CalculateFinalRect(UI_Box *root)
 		}
 	}
 
-	if(UI_BoxHasFlag(root, UI_BoxFlag_AnimateScale))
+	if (UI_BoxHasFlag(root, UI_BoxFlag_AnimateScale))
 	{
 		root->calc_scale = root->calc_scale + (root->target_scale - root->calc_scale) * animation_delta;
 	}
@@ -1246,7 +1246,7 @@ internal void UI_CalculateFinalRect(UI_Box *root)
 		root->calc_scale = root->target_scale;
 	}
 
-	if(Abs(root->calc_scale - root->target_scale) <= 0.000001f)
+	if (Abs(root->calc_scale - root->target_scale) <= 0.000001f)
 	{
 		root->calc_scale = root->target_scale;
 	}
@@ -1257,7 +1257,7 @@ internal void UI_CalculateFinalRect(UI_Box *root)
 	root->calc_rect.min.x = root->calc_pos[Axis2_X];
 	root->calc_rect.min.y = root->calc_pos[Axis2_Y];
 
-	if(root->calc_scale != root->target_scale)
+	if (root->calc_scale != root->target_scale)
 	{
 		root->calc_rect.min.x += (root->target_size[Axis2_X] - root->calc_size[Axis2_X]) / 2;
 		root->calc_rect.min.y += (root->target_size[Axis2_Y] - root->calc_size[Axis2_Y]) / 2;
@@ -1265,9 +1265,9 @@ internal void UI_CalculateFinalRect(UI_Box *root)
 
 	root->calc_rect.max = V2AddV2(root->calc_rect.min, V2(root->calc_size[Axis2_X], root->calc_size[Axis2_Y]));
 
-	for(UI_Box *child = root->first;
-			child != 0;
-			child = child->next)
+	for (UI_Box *child = root->first;
+		 child != 0;
+		 child = child->next)
 	{
 		UI_CalculateFinalRect(child);
 	}
@@ -1280,7 +1280,7 @@ internal Vec2F32 UI_AlignDimInRect(Vec2F32 dim, RectF32 calc_rect, UI_TextAlign 
 	F32 rect_width = calc_rect.x1 - calc_rect.x0;
 	F32 rect_height = calc_rect.y1 - calc_rect.y0;
 
-	switch(align)
+	switch (align)
 	{
 		case UI_TextAlign_Center:
 		{
@@ -1306,7 +1306,7 @@ internal Vec2F32 UI_AlignDimInRect(Vec2F32 dim, RectF32 calc_rect, UI_TextAlign 
 
 internal void UI_Animate(UI_Box *root, F32 dt)
 {
-	if(UI_KeyMatch(ui_state->hot_key, root->key))
+	if (UI_KeyMatch(ui_state->hot_key, root->key))
 	{
 		root->hot_t += 0.1f;
 	}
@@ -1315,7 +1315,7 @@ internal void UI_Animate(UI_Box *root, F32 dt)
 		root->hot_t -= 0.1f;
 	}
 
-	if(UI_KeyMatch(ui_state->active_key, root->key))
+	if (UI_KeyMatch(ui_state->active_key, root->key))
 	{
 		root->active_t += 0.1f;
 	}
@@ -1327,9 +1327,9 @@ internal void UI_Animate(UI_Box *root, F32 dt)
 	root->hot_t = Clamp(0.0f, root->hot_t, 1.0f);
 	root->active_t = Clamp(0.0f, root->hot_t, 1.0f);
 
-	for(UI_Box *child = root->first;
-			child != 0;
-			child = child->next)
+	for (UI_Box *child = root->first;
+		 child != 0;
+		 child = child->next)
 	{
 		UI_Animate(child, dt);
 	}
@@ -1346,63 +1346,63 @@ UI_Draw(UI_Box *root)
 	Vec4F32 corner_radius = rect_style->corner_radius;
 	corner_radius = V4MulF32(corner_radius, (F32)ui_state->font->height / 30.0f);
 
-	if(root->flags & UI_BoxFlag_DrawDropShadow)
+	if (root->flags & UI_BoxFlag_DrawDropShadow)
 	{
 
 		R_PushRect(V2SubV2(root->calc_rect.min, V2(10, 10)),
-							 V2AddV2(root->calc_rect.max, V2(15, 15)),
-							 .color = V4(0, 0, 0, 0.5f),
-							 .edge_softness = 10.0f,
-							 .corner_radius = corner_radius);
+				   V2AddV2(root->calc_rect.max, V2(15, 15)),
+				   .color = V4(0, 0, 0, 0.5f),
+				   .edge_softness = 10.0f,
+				   .corner_radius = corner_radius);
 
 	}
 
-	if(root->flags & UI_BoxFlag_DrawBackground)
+	if (root->flags & UI_BoxFlag_DrawBackground)
 	{
 		Vec4F32 color = rect_style->background_color;
 
-		if((root->flags & UI_BoxFlag_ActiveAnimation) &&
-			 UI_IsActive(root))
+		if ((root->flags & UI_BoxFlag_ActiveAnimation) &&
+			UI_IsActive(root))
 		{
 			color = rect_style->active_color;
 		}
-		else if(root->flags & UI_BoxFlag_HotAnimation &&
-						UI_IsHot(root))
+		else if (root->flags & UI_BoxFlag_HotAnimation &&
+				 UI_IsHot(root))
 		{
 			color = rect_style->hot_color;
 		}
 
 		R_PushRect(root->calc_rect.min, root->calc_rect.max,
-							 .color = color,
-							 .corner_radius = corner_radius,
-							 .edge_softness = rect_style->edge_softness);
+				   .color = color,
+				   .corner_radius = corner_radius,
+				   .edge_softness = rect_style->edge_softness);
 	}
 
-	if(root->flags & UI_BoxFlag_DrawBorder)
+	if (root->flags & UI_BoxFlag_DrawBorder)
 	{
-		if(UI_IsFocused(root) && !UI_KeyIsNull(ui_state->focus_key) && UI_BoxHasFlag(root, UI_BoxFlag_FocusAnimation))
+		if (UI_IsFocused(root) && !UI_KeyIsNull(ui_state->focus_key) && UI_BoxHasFlag(root, UI_BoxFlag_FocusAnimation))
 		{
 			// TODO(hampus): Fix this. 
 			F32 t = 0;
 			R_PushRect(root->calc_rect.min, root->calc_rect.max,
-								 .corner_radius = corner_radius,
-								 .border_thickness = rect_style->border_thickness,
-								 .color = V4(0.8f + 0.2f * t, 0.8f + 0.2f * t, 0.0f, 1.0f),
-								 .edge_softness = 1.0f);
+					   .corner_radius = corner_radius,
+					   .border_thickness = rect_style->border_thickness,
+					   .color = V4(0.8f + 0.2f * t, 0.8f + 0.2f * t, 0.0f, 1.0f),
+					   .edge_softness = 1.0f);
 		}
 		else
 		{
 			R_PushRect(root->calc_rect.min, root->calc_rect.max,
-								 .corner_radius = corner_radius,
-								 .border_thickness = rect_style->border_thickness,
-								 .color = rect_style->border_color,
-								 .edge_softness = 1.0f);
+					   .corner_radius = corner_radius,
+					   .border_thickness = rect_style->border_thickness,
+					   .color = rect_style->border_color,
+					   .edge_softness = 1.0f);
 		}
 	}
 
-	if(root->flags & UI_BoxFlag_DrawText)
+	if (root->flags & UI_BoxFlag_DrawText)
 	{
-		if(text_style->icon)
+		if (text_style->icon)
 		{
 			R_Glyph *glyph = &ui_state->font->glyphs[text_style->icon];
 			Vec2F32 glyph_dim = V2((F32)glyph->advance, (F32)ui_state->font->max_height);
@@ -1414,7 +1414,7 @@ UI_Draw(UI_Box *root)
 			};
 
 			R_PushGlyphIndex(UI_AlignDimInRect(glyph_dim, root->calc_rect, text_style->text_align, padding),
-											 text_style->font_size, ui_state->font, text_style->icon, V4(1.0f, 1.0f, 1.0f, 1.0f));
+							 text_style->font_size, ui_state->font, text_style->icon, V4(1.0f, 1.0f, 1.0f, 1.0f));
 		}
 		else
 		{
@@ -1427,25 +1427,25 @@ UI_Draw(UI_Box *root)
 			};
 
 			R_PushText(UI_AlignDimInRect(text_dim, root->calc_rect, text_style->text_align, padding),
-								 text_style->font_size,
-								 ui_state->font,
-								 root->display_string,
-								 text_style->text_color);
+					   text_style->font_size,
+					   ui_state->font,
+					   root->display_string,
+					   text_style->text_color);
 		}
 	}
 
-	if(ui_state->show_debug_lines)
+	if (ui_state->show_debug_lines)
 	{
 		R_PushRect(root->calc_rect.min, root->calc_rect.max,
-							 .border_thickness = 1.0f,
-							 .color = V4(1.0f, 0.0f, 1.0f, 1.0f));
+				   .border_thickness = 1.0f,
+				   .color = V4(1.0f, 0.0f, 1.0f, 1.0f));
 	}
 
 	R_PopClipRect();
 
-	for(UI_Box *child = root->first;
-			child != 0;
-			child = child->next)
+	for (UI_Box *child = root->first;
+		 child != 0;
+		 child = child->next)
 	{
 		UI_Draw(child);
 	}
@@ -1482,15 +1482,15 @@ UI_End()
 }
 
 internal UI_State *
-UI_Init(R_Font *font, OS_Window *window)
+UI_Init(MemoryArena *arena, R_Font *font, OS_Window *window)
 {
-	UI_State *result = OS_AllocMem(sizeof(UI_State));
+	UI_State *result = PushStructNoZero(arena, UI_State);
 
 	size_t ui_permanent_storage_size = GIGABYTES(1);
 	size_t ui_frame_storage_size = MEGABYTES(8);
 	size_t ui_memory_size = ui_permanent_storage_size + ui_frame_storage_size;
 	// TODO(hampus): Remove calloc()
-	void *ui_memory = OS_AllocMem(ui_memory_size);
+	void *ui_memory = PushArrayNoZero(arena, ui_memory_size, U8);
 
 	result->font = font;
 	result->window = window;
@@ -1501,7 +1501,7 @@ UI_Init(R_Font *font, OS_Window *window)
 	result->box_storage_count = 4096;
 	result->box_storage = PushArrayNoZero(&result->permanent_arena, result->box_storage_count, UI_Box);
 
-	for(U64 i = 0; i < result->box_storage_count; ++i)
+	for (U64 i = 0; i < result->box_storage_count; ++i)
 	{
 		UI_FreeBox *free_box = (UI_FreeBox *)(result->box_storage + i);
 		free_box->next = result->first_free_box;

@@ -30,9 +30,9 @@ It includes:
 ## Building from source
 This demonstrates how to build and run the provided example in examples folder.
 
-Only builds on windows at the moment.
+This shows how to build the provided example. Only builds on windows at the moment and requires the MSVC compiler.
 
-1. Run `build_core_layer_demo.bat` with visual studio environment variables enabled
+1. Run `build_core_layer_demo.bat` inside `examples` folder inside the `x64 Native Tools Command Prompt for VS 2022`
 2. A folder `build` has been created in the root folder, run the .exe created.
 
 ## Showcase
