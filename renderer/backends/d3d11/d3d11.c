@@ -89,7 +89,7 @@ D3D11_Init(OS_Window *window)
 
 		D3D11_BUFFER_DESC desc =
 		{
-			.ByteWidth = MEGABYTES(1),
+			.ByteWidth = MEGABYTES(512),
 			.Usage = D3D11_USAGE_DYNAMIC,
 			.BindFlags = D3D11_BIND_VERTEX_BUFFER,
 			.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE

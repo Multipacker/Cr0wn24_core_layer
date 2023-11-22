@@ -268,6 +268,18 @@ OS_GatherEventsFromWindow(MemoryArena *arena)
 				event.key = OS_Key_MouseRight;
 			} break;
 
+			case WM_MBUTTONUP:
+			{
+				event.type = OS_EventType_KeyRelease;
+				event.key = OS_Key_MouseMiddle;
+			} break;
+
+			case WM_MBUTTONDOWN:
+			{
+				event.type = OS_EventType_KeyPress;
+				event.key = OS_Key_MouseMiddle;
+			} break;
+
 			case WM_MOUSEWHEEL:
 			{
 				os_state.scroll = GET_WHEEL_DELTA_WPARAM(message.wParam) / WHEEL_DELTA;

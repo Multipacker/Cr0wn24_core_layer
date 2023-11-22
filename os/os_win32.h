@@ -64,6 +64,7 @@ typedef enum OS_Key
 	OS_Key_F12,
 
 	OS_Key_MouseLeft,
+	OS_Key_MouseMiddle,
 	OS_Key_MouseRight,
 
 	OS_Key_Return,

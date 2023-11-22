@@ -64,6 +64,11 @@ R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params)
 	if(batch_node)
 	{
 		rect_match = R_RectF32Match(batch_node->batch->clip_rect, r_state->clip_rect_stack.first->rect);
+
+		if(batch_node->batch->num_rects == 4096)
+		{
+			batch_node = 0;
+		}
 	}
 
 	if(!batch_node ||
@@ -191,8 +196,8 @@ R_PackBitmapsIntoTextureAtlas(MemoryArena *arena, S32 atlas_width, S32 atlas_hei
 			{
 				Swap(bitmaps[j], bitmaps[j + 1], R_LoadedBitmap);
 				Swap(indices[j], indices[j + 1], S32);
-			}
-		}
+	}
+}
 	}
 #endif
 	// NOTE(hampus): Atlas-packing
