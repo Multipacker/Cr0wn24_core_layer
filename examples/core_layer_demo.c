@@ -250,7 +250,7 @@ EntryPoint(String8List args)
 	R_Font font = {0};
 	R_LoadFont(&permanent_arena, &font, CORE_RESOURCE("font/liberation-mono.ttf"), CORE_RESOURCE("font/icon/mfglabsiconset-webfont.ttf"), 20);
 
-	UI_State *state = UI_Init(&font, window);
+	UI_State *state = UI_Init(&permanent_arena, &font, window);
 	UI_SelectState(state);
 
 	F64 dt = 0;
