@@ -80,6 +80,13 @@ typedef struct Rect
 	F32 border_thickness;
 } Rect;
 
+typedef struct LineVertex
+{
+	Vec2F32 inst_pos;
+	Vec2F32 dir;
+	F32 thickness;
+} LineVertex;
+
 typedef struct R_RectParams
 {
 	Vec4F32 color;
@@ -97,12 +104,21 @@ typedef struct R_RectParams
 	F32 border_thickness;
 } R_RectParams;
 
+typedef enum Batch2DInstKind
+{
+	Batch2DInstKind_Line,
+	Batch2DInstKind_Rect,
+
+	Batch2DInstKind_COUNT
+} Batch2DInstKind;
+
 typedef struct Batch2D
 {
-	Rect rects[4096];
-	U32 num_rects;
+	U8 data[4096 * sizeof(Rect)];
+	U32 inst_count;
 	R_Texture tex;
 	RectF32 clip_rect;
+	Batch2DInstKind inst_kind;
 } Batch2D;
 
 typedef struct Batch2DNode

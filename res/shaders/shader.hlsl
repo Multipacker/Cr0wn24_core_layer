@@ -81,6 +81,7 @@ struct ps_out
 	float4 color0 : SV_TARGET0;
 	float4 color1 : SV_TARGET1;
 };
+
 ps_out ps(PS_INPUT input)
 {
 	float2 softness = float2(input.edge_softness, input.edge_softness);

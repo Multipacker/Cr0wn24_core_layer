@@ -39,9 +39,14 @@ typedef struct D3D11State
 	ID3D11VertexShader *v_shader;
 	ID3D11PixelShader *p_shader;
 
+	ID3D11InputLayout *line_layout;
+	ID3D11VertexShader *line_vertex_shader;
+	ID3D11PixelShader *line_pixel_shader;
+
 	ID3D11DepthStencilState *depthState;
 	ID3D11RasterizerState* rasterizerState;
 	ID3D11BlendState* blend_state;
+	ID3D11BlendState* line_blend_state;
 	ID3D11SamplerState* sampler;
 
 	DWORD current_width;
