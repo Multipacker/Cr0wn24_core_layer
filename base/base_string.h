@@ -33,4 +33,7 @@ typedef struct String8Stack
 	String8StackNode *first;
 } String8Stack;
 
+#define Str8Lit(s) Str8((U8 *)s, sizeof(s) - 1)
+#define Str8C(s) Str8((U8 *)s, CStringLength(s))
+
 #endif

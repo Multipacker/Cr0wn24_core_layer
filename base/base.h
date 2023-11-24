@@ -104,9 +104,6 @@ typedef S32 B32;
 
 #define QueuePop(f,l) QueuePop_N(f,l,next)
 
-#define Str8Lit(s) Str8((U8 *)s, sizeof(s) - 1)
-#define Str8C(s) Str8((U8 *)s, CStringLength(s))
-
 typedef enum Month
 {
 	Month_None,

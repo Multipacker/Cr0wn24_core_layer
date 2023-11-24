@@ -1,9 +1,10 @@
 struct VS_INPUT
 {
-	uint vertex_id : SV_VertexID;
 	float2 inst_pos : INST_POS;
 	float2 dir : DIR;
 	float thickness : THICKNESS;
+	float4 color : COLOR;
+	uint vertex_id : SV_VertexID;
 };
 
 struct PS_INPUT
@@ -12,6 +13,7 @@ struct PS_INPUT
 	float2 pos : POS;
 	float2 ip : IP;
 	float2 dir : DIR;
+	float4 color : COLOR;
 	float thickness : THICKNESS;
 };
 
@@ -52,6 +54,7 @@ PS_INPUT vs(VS_INPUT input)
 	output.ip = input.inst_pos;
 	output.dir = input.dir;
 	output.thickness = input.thickness;
+	output.color = input.color;
 
 	return output;
 }
@@ -67,7 +70,7 @@ float4 ps(PS_INPUT input) : SV_TARGET
 
 	float sdf_factor = 1.f - smoothstep(-aaf, aaf, dist);
 
-	float4 color = float4(1, 1, 1, 1);
+	float4 color = input.color;
 	color.a *= sdf_factor;
 	return color;
 }

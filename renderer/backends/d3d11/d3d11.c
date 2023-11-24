@@ -126,6 +126,7 @@ D3D11_Init(OS_Window *window)
 			{"INST_POS", 0, DXGI_FORMAT_R32G32_FLOAT, 0, MemberOffset(LineVertex, inst_pos), D3D11_INPUT_PER_INSTANCE_DATA, 1},
 			{"DIR", 0, DXGI_FORMAT_R32G32_FLOAT, 0, MemberOffset(LineVertex, dir), D3D11_INPUT_PER_INSTANCE_DATA, 1},
 			{"THICKNESS", 0, DXGI_FORMAT_R32G32_FLOAT, 0, MemberOffset(LineVertex, thickness), D3D11_INPUT_PER_INSTANCE_DATA, 1},
+			{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, MemberOffset(LineVertex, color), D3D11_INPUT_PER_INSTANCE_DATA, 1},
 		};
 
 #include "core_layer/renderer/backends/d3d11/d3d11_line_vshader.h"

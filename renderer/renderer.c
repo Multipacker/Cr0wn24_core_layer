@@ -125,7 +125,7 @@ R_PushRect_(Vec2F32 min, Vec2F32 max, R_RectParams params)
 }
 
 internal void
-R_PushLine(Vec2F32 p0, Vec2F32 p1, F32 thickness)
+R_PushLine(Vec2F32 p0, Vec2F32 p1, F32 thickness, Vec4F32 color)
 {
 	RenderData *render_data = &r_state->render_data;
 	Batch2DNode *batch_node = render_data->batch_list->last;
@@ -177,6 +177,7 @@ R_PushLine(Vec2F32 p0, Vec2F32 p1, F32 thickness)
 	line->inst_pos = inst_pos;
 	line->dir = dir;
 	line->thickness = thickness;
+	line->color = color;
 
 	batch->inst_count++;
 }
@@ -261,7 +262,7 @@ R_PackBitmapsIntoTextureAtlas(MemoryArena *arena, S32 atlas_width, S32 atlas_hei
 				Swap(indices[j], indices[j + 1], S32);
 			}
 		}
-}
+	}
 #endif
 	// NOTE(hampus): Atlas-packing
 

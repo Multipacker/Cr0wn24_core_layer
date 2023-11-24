@@ -85,6 +85,7 @@ typedef struct LineVertex
 	Vec2F32 inst_pos;
 	Vec2F32 dir;
 	F32 thickness;
+	Vec4F32 color;
 } LineVertex;
 
 typedef struct R_RectParams
