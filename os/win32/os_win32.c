@@ -195,27 +195,6 @@ OS_ToggleFullscreen(OS_Window *window)
 	}
 }
 
-internal void
-OS_EatEvent(OS_EventList *event_list, OS_EventNode *node)
-{
-	if(node == event_list->first)
-	{
-		event_list->first = event_list->first->next;
-	}
-	else
-	{
-		if(node->prev)
-		{
-			node->prev->next = node->next;
-		}
-
-		if(node->next)
-		{
-			node->next->prev = node->prev;
-		}
-	}
-}
-
 internal OS_EventList *
 OS_GatherEventsFromWindow(MemoryArena *arena)
 {
@@ -499,17 +478,6 @@ OS_LoadFunction(OS_Library library, String8 function_name)
 	return result;
 }
 
-// TODO(hampus): Move this onto the base layer!
-internal B32 SameTime(Time *a, Time *b)
-{
-	return(a->year == b->year &&
-				 a->month == b->month &&
-				 a->day == b->day &&
-				 a->hour == b->hour &&
-				 a->minute == b->minute &&
-				 a->second == b->second);
-}
-
 internal void OS_CopyFile(String8 dst, String8 src)
 {
 	CopyFileA((LPCSTR)src.str, (LPCSTR)dst.str, FALSE);
@@ -584,41 +552,4 @@ internal void
 OS_SetHoverCursor(OS_Cursor type)
 {
 	SetCursor(os_state.cursors[type]);
-}
-
-internal B32
-OS_TimeGreaterThanTime(Time *a, Time *b)
-{
-	B32 result = false;
-
-	if(a->year > b->year)
-	{
-		result = true;
-	}
-	else if(a->month > b->month)
-	{
-		result = true;
-	}
-	else if(a->day > b->day)
-	{
-		result = true;
-	}
-	else if(a->hour > b->hour)
-	{
-		result = true;
-	}
-	else if(a->minute > b->minute)
-	{
-		result = true;
-	}
-	else if(a->second > b->second)
-	{
-		result = true;
-	}
-	else if(a->millisecond > b->millisecond)
-	{
-		result = true;
-	}
-
-	return(result);
 }
