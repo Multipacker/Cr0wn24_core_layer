@@ -2,7 +2,7 @@ internal U64 CStringLength(char * str)
 {
 	U64 result = 0;
 
-	while(*(str + result))
+	while (*(str + result))
 	{
 		++result;
 	}
@@ -17,11 +17,11 @@ internal B32 CStringsAreEqual(char *string0, char *string1)
 	U64 length0 = CStringLength(string0);
 	U64 length1 = CStringLength(string1);
 
-	if(length0 == length1)
+	if (length0 == length1)
 	{
-		for(U64 i = 0; i < length0; ++i)
+		for (U64 i = 0; i < length0; ++i)
 		{
-			if(string0[i] != string1[i])
+			if (string0[i] != string1[i])
 			{
 				result = false;
 				break;
@@ -39,7 +39,7 @@ internal B32 CStringsAreEqual(char *string0, char *string1)
 internal void CStringCopy(char *dest, char *src, U32 src_size, U32 dest_size)
 {
 	Assert(src_size >= dest_size);
-	for(U32 i = 0; i < dest_size; ++i)
+	for (U32 i = 0; i < dest_size; ++i)
 	{
 		*dest++ = *src++;
 	}
@@ -87,11 +87,11 @@ internal B32 Str8Match(String8 a, String8 b)
 {
 	B32 result = true;
 
-	if(a.size == b.size)
+	if (a.size == b.size)
 	{
-		for(U64 i = 0; i < a.size; ++i)
+		for (U64 i = 0; i < a.size; ++i)
 		{
-			if(a.str[i] != b.str[i])
+			if (a.str[i] != b.str[i])
 			{
 				result = false;
 				break;
@@ -121,31 +121,31 @@ internal String8 Str8Append(MemoryArena *arena, String8 a, String8 b)
 
 internal S32 Str8FindSubStr8(String8 haystack, String8 needle)
 {
-	if(haystack.size <= needle.size)
+	if (haystack.size <= needle.size)
 	{
 		return (-1);
 	}
 
 	S32 pos = -1;
-	for(U64 i = 0; i < haystack.size; ++i)
+	for (U64 i = 0; i < haystack.size; ++i)
 	{
-		if((haystack.size - i) < needle.size)
+		if ((haystack.size - i) < needle.size)
 		{
 			break;
 		}
 
-		if(haystack.str[i] == needle.str[0])
+		if (haystack.str[i] == needle.str[0])
 		{
 			B32 found = true;
-			for(U64 j = 1; j < needle.size; ++j)
+			for (U64 j = 1; j < needle.size; ++j)
 			{
-				if(haystack.str[i + j] != needle.str[j])
+				if (haystack.str[i + j] != needle.str[j])
 				{
 					found = false;
 				}
 			}
 
-			if(found)
+			if (found)
 			{
 				pos = (S32)i;
 				break;
@@ -163,11 +163,11 @@ internal String8List Str8Split(MemoryArena *arena, String8 string, char separato
 	char *start = (char*)string.str;
 	char *current = (char*)string.str;
 
-	while(true)
+	while (true)
 	{
 		char ch = *current;
-		if(ch == separator ||
-			 ch == '\0')
+		if (ch == separator ||
+			ch == '\0')
 		{
 			String8Node *node = PushStruct(arena, String8Node);
 			node->string = PushStr8Size(arena, start, current - start);
@@ -177,7 +177,7 @@ internal String8List Str8Split(MemoryArena *arena, String8 string, char separato
 			start = current;
 		}
 
-		if(ch == '\0')
+		if (ch == '\0')
 		{
 			break;
 		}
