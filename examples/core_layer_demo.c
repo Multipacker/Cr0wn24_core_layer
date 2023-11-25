@@ -1,13 +1,13 @@
 #define CORE_PATH "../"
 
 #include "core_layer/base/base_inc.h"
-#include "core_layer/os/os_win32_inc.h"
+#include "core_layer/os/win32/os_win32_inc.h"
 #include "core_layer/renderer/renderer.h"
 #include "core_layer/renderer/backends/d3d11/d3d11.h"
 #include "core_layer/ui/ui_inc.h"
 
 #include "core_layer/base/base_inc.c"
-#include "core_layer/os/os_win32_inc.c"
+#include "core_layer/os/win32/os_win32_inc.c"
 #include "core_layer/renderer/renderer.c"
 #include "core_layer/renderer/backends/d3d11/d3d11.c"
 #include "core_layer/ui/ui_inc.c"
